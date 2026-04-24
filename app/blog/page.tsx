@@ -16,6 +16,30 @@ const POSTS = [
     readTime: '6 min read',
     tag: 'Strategy',
   },
+  {
+    slug: 'ptptn-payoff-strategies-malaysia',
+    title: 'How to Pay Off PTPTN Faster — Strategies Every Malaysian Graduate Should Know',
+    excerpt: 'Over 1.2 million Malaysians are blacklisted by PTPTN. Most didn\'t intend to default — they just didn\'t have a plan. Here\'s everything you need to clear PTPTN faster and stay off the list.',
+    date: '20 April 2026',
+    readTime: '7 min read',
+    tag: 'PTPTN',
+  },
+  {
+    slug: 'credit-card-minimum-payment-trap-malaysia',
+    title: 'The Minimum Payment Trap: Why Your Credit Card Debt Never Seems to Go Down',
+    excerpt: 'Paying the minimum every month feels responsible. It isn\'t. Here\'s the brutal math of what minimum payments actually cost Malaysians — and exactly what to do instead.',
+    date: '15 April 2026',
+    readTime: '5 min read',
+    tag: 'Credit Cards',
+  },
+  {
+    slug: 'how-to-negotiate-with-your-bank-in-malaysia',
+    title: 'How to Negotiate With Your Bank in Malaysia (Scripts Included)',
+    excerpt: 'Most Malaysians never think to call their bank and ask for better terms. Many who do, get them. Here\'s exactly what to say — rate reductions, fee waivers, hardship plans, and more.',
+    date: '10 April 2026',
+    readTime: '6 min read',
+    tag: 'Banking',
+  },
 ]
 
 export default function BlogPage() {
