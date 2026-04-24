@@ -152,6 +152,7 @@ export default function LandingPage() {
           <Link href="/pricing" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Pricing</Link>
           <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
+          <Link href="/terms" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Terms</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">
             Log in
           </Link>
@@ -435,6 +436,7 @@ export default function LandingPage() {
               <Link href="/pricing" className="hover:text-white/70 transition-colors">Pricing</Link>
               <Link href="/contact" className="hover:text-white/70 transition-colors">Contact</Link>
               <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
               <Link href="/login" className="hover:text-white/70 transition-colors">Log in</Link>
             </div>
           </div>
