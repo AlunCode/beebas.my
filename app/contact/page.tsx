@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -62,6 +63,8 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        <PublicAdBanner className="mb-6" />
 
         {/* Contact form — posts via mailto */}
         <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-6 sm:p-8">

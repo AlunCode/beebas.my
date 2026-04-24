@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'How to Negotiate With Your Bank in Malaysia (Scripts Included)',
@@ -167,6 +168,9 @@ export default function ArticlePage() {
               Success rate is very high — banks know that losing a customer over an annual fee is terrible economics. If they say they can't waive it fully, ask for a partial waiver or a credit of equivalent value (reward points, cashback).
             </p>
           </section>
+
+          {/* Ad — mid article */}
+          <PublicAdBanner slot="in-article" />
 
           <section>
             <h2 className="text-2xl font-extrabold mb-4">Negotiation 3: Late payment fee waiver</h2>

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'The Minimum Payment Trap: Why Your Credit Card Debt Never Seems to Go Down',
@@ -144,6 +145,9 @@ export default function ArticlePage() {
               Paying minimums on a RM 10,000 balance costs you <strong className="text-[#1C1C1C]">RM 8,200 in interest alone</strong> — meaning you pay RM 18,200 in total for a RM 10,000 debt. That's 82% extra.
             </p>
           </section>
+
+          {/* Ad — mid article */}
+          <PublicAdBanner slot="in-article" />
 
           <section>
             <h2 className="text-2xl font-extrabold mb-4">Why the minimum keeps shrinking (making it worse)</h2>

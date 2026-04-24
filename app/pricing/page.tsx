@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { UpgradeButton } from './_components/upgrade-button'
 import { BillingPortalButton } from './_components/billing-portal-button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 const MONTHLY_PRICE_ID = process.env.STRIPE_PRO_MONTHLY_PRICE_ID!
 const ANNUAL_PRICE_ID = process.env.STRIPE_PRO_ANNUAL_PRICE_ID!
@@ -162,6 +163,11 @@ export default async function PricingPage() {
               )
             }
           />
+        </div>
+
+        {/* Ad — above disclaimer */}
+        <div className="max-w-3xl mx-auto px-4 sm:px-0 mt-10">
+          <PublicAdBanner />
         </div>
 
         {/* Disclaimer */}

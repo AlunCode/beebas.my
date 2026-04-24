@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: '7 Proven Techniques to Clear Your Debt Faster in Malaysia',
@@ -144,6 +145,9 @@ export default function ArticlePage() {
               <strong>Warning:</strong> Consolidation only works if you stop using the credit cards you just cleared. Many people consolidate, then re-rack the cards and end up with more debt than before.
             </div>
           </section>
+
+          {/* Ad — mid article */}
+          <PublicAdBanner slot="in-article" />
 
           {/* 4 */}
           <section>

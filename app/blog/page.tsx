@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'Blog — Debt Tips for Malaysians',
@@ -76,26 +77,29 @@ export default function BlogPage() {
         </div>
 
         <div className="space-y-4">
-          {POSTS.map(post => (
-            <Link
-              key={post.slug}
-              href={`/blog/${post.slug}`}
-              className="block rounded-2xl bg-white border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow group"
-            >
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xs font-bold bg-[#FFF8DC] text-[#8B6000] px-2.5 py-1 rounded-full">
-                  {post.tag}
-                </span>
-                <span className="text-xs text-muted-foreground">{post.date} · {post.readTime}</span>
-              </div>
-              <h2 className="text-lg font-extrabold text-[#1C1C1C] mb-2 group-hover:text-[#8B6000] transition-colors leading-snug">
-                {post.title}
-              </h2>
-              <p className="text-sm text-muted-foreground leading-relaxed">{post.excerpt}</p>
-              <p className="text-sm font-bold text-[#1C1C1C] mt-4 group-hover:underline">
-                Read article →
-              </p>
-            </Link>
+          {POSTS.map((post, i) => (
+            <>
+              <Link
+                key={post.slug}
+                href={`/blog/${post.slug}`}
+                className="block rounded-2xl bg-white border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow group"
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-xs font-bold bg-[#FFF8DC] text-[#8B6000] px-2.5 py-1 rounded-full">
+                    {post.tag}
+                  </span>
+                  <span className="text-xs text-muted-foreground">{post.date} · {post.readTime}</span>
+                </div>
+                <h2 className="text-lg font-extrabold text-[#1C1C1C] mb-2 group-hover:text-[#8B6000] transition-colors leading-snug">
+                  {post.title}
+                </h2>
+                <p className="text-sm text-muted-foreground leading-relaxed">{post.excerpt}</p>
+                <p className="text-sm font-bold text-[#1C1C1C] mt-4 group-hover:underline">
+                  Read article →
+                </p>
+              </Link>
+              {i === 0 && <PublicAdBanner key="ad" />}
+            </>
           ))}
         </div>
       </main>

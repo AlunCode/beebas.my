@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { InterestCalculator } from './_components/interest-calculator'
+import { PublicAdBanner } from './_components/public-ad-banner'
 
 const STATS = [
   { value: 'RM 847', label: 'avg monthly interest saved' },
@@ -184,6 +185,13 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Ad — between stats and features */}
+      <section className="bg-white px-6 pt-8 pb-0">
+        <div className="max-w-5xl mx-auto">
+          <PublicAdBanner />
+        </div>
+      </section>
+
       {/* Features */}
       <section className="bg-white px-6 py-20">
         <div className="max-w-5xl mx-auto">
@@ -295,6 +303,13 @@ export default function LandingPage() {
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      {/* Ad — between comparison table and pricing teaser */}
+      <section className="bg-white px-6 pb-8">
+        <div className="max-w-3xl mx-auto">
+          <PublicAdBanner />
         </div>
       </section>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -85,6 +86,8 @@ export default function PrivacyPage() {
             </ul>
             <p>You can control cookies through your browser settings. Disabling essential cookies will prevent you from logging in.</p>
           </Section>
+
+          <PublicAdBanner className="my-2" />
 
           <Section title="5. Third-party services">
             <p>Beebas uses the following third-party services. Each has its own privacy policy:</p>

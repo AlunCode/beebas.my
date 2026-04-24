@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'How to Pay Off PTPTN Faster — Strategies Every Malaysian Graduate Should Know',
@@ -170,6 +171,9 @@ export default function ArticlePage() {
               </li>
             </ul>
           </section>
+
+          {/* Ad — mid article */}
+          <PublicAdBanner slot="in-article" />
 
           <section>
             <h2 className="text-2xl font-extrabold mb-4">Strategy 3: Pay above your minimum monthly instalment</h2>

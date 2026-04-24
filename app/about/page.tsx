@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
   title: 'About',
@@ -96,8 +97,10 @@ export default function AboutPage() {
           </p>
         </div>
 
+        <PublicAdBanner className="mt-10" />
+
         {/* CTA */}
-        <div className="mt-14 rounded-2xl bg-[#1C1C1C] px-6 py-8 text-center">
+        <div className="mt-8 rounded-2xl bg-[#1C1C1C] px-6 py-8 text-center">
           <div className="text-3xl mb-3">🐝</div>
           <h3 className="text-white font-extrabold text-xl mb-2">Ready to see your debt-free date?</h3>
           <p className="text-white/50 text-sm mb-5">Free to start. Takes 3 minutes.</p>
