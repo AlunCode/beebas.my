@@ -7,6 +7,7 @@ import { DebtForm } from './_components/debt-form'
 import { DebtList } from './_components/debt-list'
 import { PayoffCalculator } from './_components/payoff-calculator'
 import { BillingPortalButton } from '@/app/pricing/_components/billing-portal-button'
+import { AdBanner } from './_components/ad-banner'
 
 export default async function DashboardPage({
   searchParams,
@@ -110,6 +111,9 @@ export default async function DashboardPage({
           </div>
         )}
 
+        {/* Ad — between debt list and payoff plan (free users only) */}
+        {!pro && debtList.length > 0 && <AdBanner slot="mid" />}
+
         {/* Payoff plan */}
         {debtList.length > 0 && (
           <div>
@@ -117,6 +121,9 @@ export default async function DashboardPage({
             <PayoffCalculator debts={debtList} />
           </div>
         )}
+
+        {/* Ad — bottom of page (free users with debts, not already showing upsell banner) */}
+        {!pro && debtList.length > 0 && <AdBanner slot="bottom" />}
 
         {/* Soft upsell for free users with debts */}
         {!pro && debtList.length > 0 && debtList.length < 3 && (
