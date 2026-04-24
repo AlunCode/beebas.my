@@ -30,9 +30,28 @@ function Tip({ children }: { children: React.ReactNode }) {
   )
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: '7 Proven Techniques to Clear Your Debt Faster in Malaysia',
+  description: 'From snowball and avalanche to 0% balance transfers and rate renegotiation — every debt repayment strategy Malaysians can use right now.',
+  datePublished: '2026-04-24',
+  dateModified: '2026-04-24',
+  author: { '@type': 'Organization', name: 'Beebas', url: 'https://beebas.my' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beebas',
+    url: 'https://beebas.my',
+    logo: { '@type': 'ImageObject', url: 'https://beebas.my/icon' },
+  },
+  url: 'https://beebas.my/blog/how-to-clear-debt-faster-in-malaysia',
+  mainEntityOfPage: 'https://beebas.my/blog/how-to-clear-debt-faster-in-malaysia',
+}
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       {/* Navbar */}
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">

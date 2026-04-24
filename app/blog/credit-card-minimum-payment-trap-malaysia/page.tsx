@@ -30,9 +30,28 @@ function Tip({ children }: { children: React.ReactNode }) {
   )
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'The Minimum Payment Trap: Why Your Credit Card Debt Never Seems to Go Down',
+  description: "Paying the minimum on your credit card feels responsible. It isn't. Here's the brutal math of what minimum payments actually cost Malaysians — and what to do instead.",
+  datePublished: '2026-04-15',
+  dateModified: '2026-04-15',
+  author: { '@type': 'Organization', name: 'Beebas', url: 'https://beebas.my' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beebas',
+    url: 'https://beebas.my',
+    logo: { '@type': 'ImageObject', url: 'https://beebas.my/icon' },
+  },
+  url: 'https://beebas.my/blog/credit-card-minimum-payment-trap-malaysia',
+  mainEntityOfPage: 'https://beebas.my/blog/credit-card-minimum-payment-trap-malaysia',
+}
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#FFD000] flex items-center justify-center text-base">🐝</div>

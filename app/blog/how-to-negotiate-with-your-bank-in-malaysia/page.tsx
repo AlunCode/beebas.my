@@ -39,9 +39,28 @@ function Tip({ children }: { children: React.ReactNode }) {
   )
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Negotiate With Your Bank in Malaysia (Scripts Included)',
+  description: 'Most Malaysians never think to call their bank and ask for better terms. Many who do get them. Here is exactly what to say — with scripts you can use today.',
+  datePublished: '2026-04-10',
+  dateModified: '2026-04-10',
+  author: { '@type': 'Organization', name: 'Beebas', url: 'https://beebas.my' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beebas',
+    url: 'https://beebas.my',
+    logo: { '@type': 'ImageObject', url: 'https://beebas.my/icon' },
+  },
+  url: 'https://beebas.my/blog/how-to-negotiate-with-your-bank-in-malaysia',
+  mainEntityOfPage: 'https://beebas.my/blog/how-to-negotiate-with-your-bank-in-malaysia',
+}
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#FFD000] flex items-center justify-center text-base">🐝</div>

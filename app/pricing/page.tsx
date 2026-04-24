@@ -1,9 +1,42 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { UpgradeButton } from './_components/upgrade-button'
 import { BillingPortalButton } from './_components/billing-portal-button'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
+
+export const metadata: Metadata = {
+  title: 'Pricing — Beebas',
+  description: 'Start free. Upgrade to Pro for unlimited debts, PDF export, couple mode, and more. RM 19/month or RM 149/year.',
+}
+
+const PRICING_FAQS = [
+  {
+    q: 'What\'s included in the free plan?',
+    a: 'Up to 3 debts, snowball and avalanche calculator, payoff timeline chart, debt-free date countdown, and extra payment simulator. No credit card required.',
+  },
+  {
+    q: 'Can I upgrade or cancel anytime?',
+    a: 'Yes — upgrade at any time and cancel whenever you want. If you cancel, you keep Pro access until the end of your billing period. No lock-in, no penalty.',
+  },
+  {
+    q: 'Is there a refund policy?',
+    a: 'Yes. If you\'re not satisfied with your first payment, contact us within 7 days for a full refund. After that, refunds are at our discretion.',
+  },
+  {
+    q: 'Do you charge in Malaysian Ringgit?',
+    a: 'Yes. All prices are in MYR (Malaysian Ringgit). Stripe handles payment processing securely.',
+  },
+  {
+    q: 'What payment methods are accepted?',
+    a: 'Visa, Mastercard, and other major cards via Stripe. FPX bank transfer is not currently supported.',
+  },
+  {
+    q: 'Will ads show on Pro?',
+    a: 'No. Pro users see no ads — inside the dashboard or anywhere else on Beebas.',
+  },
+]
 
 const MONTHLY_PRICE_ID = process.env.STRIPE_PRO_MONTHLY_PRICE_ID!
 const ANNUAL_PRICE_ID = process.env.STRIPE_PRO_ANNUAL_PRICE_ID!
@@ -163,6 +196,24 @@ export default async function PricingPage() {
               )
             }
           />
+        </div>
+
+        {/* FAQ */}
+        <div className="max-w-3xl mx-auto mt-20">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1C1C1C] tracking-tight mb-2">
+              Frequently asked questions
+            </h2>
+            <p className="text-muted-foreground">Everything about plans, billing, and features.</p>
+          </div>
+          <div className="space-y-3">
+            {PRICING_FAQS.map(({ q, a }) => (
+              <div key={q} className="rounded-2xl border border-gray-100 bg-white shadow-sm px-6 py-5">
+                <p className="font-bold text-[#1C1C1C] mb-1.5">{q}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{a}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Ad — above disclaimer */}

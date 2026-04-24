@@ -38,9 +38,28 @@ function Warning({ children }: { children: React.ReactNode }) {
   )
 }
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: 'How to Pay Off PTPTN Faster — Strategies Every Malaysian Graduate Should Know',
+  description: 'Over 1.2 million Malaysians are blacklisted by PTPTN. Here are the most effective strategies to clear your PTPTN loan faster and stay off the list.',
+  datePublished: '2026-04-20',
+  dateModified: '2026-04-20',
+  author: { '@type': 'Organization', name: 'Beebas', url: 'https://beebas.my' },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Beebas',
+    url: 'https://beebas.my',
+    logo: { '@type': 'ImageObject', url: 'https://beebas.my/icon' },
+  },
+  url: 'https://beebas.my/blog/ptptn-payoff-strategies-malaysia',
+  mainEntityOfPage: 'https://beebas.my/blog/ptptn-payoff-strategies-malaysia',
+}
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-full bg-[#FFD000] flex items-center justify-center text-base">🐝</div>

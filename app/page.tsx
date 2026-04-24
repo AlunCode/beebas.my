@@ -74,6 +74,43 @@ const TESTIMONIALS = [
   },
 ]
 
+const FAQ_ITEMS = [
+  {
+    q: 'Is Beebas really free?',
+    a: 'Yes. The free plan is free forever — no credit card required. You can track up to 3 debts, run snowball and avalanche calculations, and see your payoff chart at no cost. Pro unlocks unlimited debts and extra features.',
+  },
+  {
+    q: 'What\'s the difference between snowball and avalanche?',
+    a: 'Snowball pays off your smallest debt first for quick wins and motivation. Avalanche targets the highest interest rate first to save the most money. Beebas calculates both and shows you exactly how much each saves.',
+  },
+  {
+    q: 'Does Beebas work for Malaysian debts like PTPTN and car loans?',
+    a: 'Yes. You can add any debt type — credit cards, personal loans, PTPTN, car loans, hire purchase. Just enter the balance, interest rate, and minimum payment.',
+  },
+  {
+    q: 'Is my financial data safe?',
+    a: 'Your debt data is stored in your private account and is only accessible by you. We use Supabase for secure, encrypted storage. We never share your data with third parties.',
+  },
+  {
+    q: 'Can I cancel Pro anytime?',
+    a: 'Yes. Cancel anytime from your billing portal — no questions asked. Your Pro access continues until the end of the billing period.',
+  },
+  {
+    q: 'Does Beebas give financial advice?',
+    a: 'No. Beebas is a planning tool that shows you the math of your debt payoff. It is not a licensed financial advisor. For personalised advice, consult a licensed financial planner.',
+  },
+]
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: FAQ_ITEMS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
@@ -102,10 +139,8 @@ const jsonLd = {
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       {/* Navbar */}
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2.5">
@@ -344,6 +379,26 @@ export default function LandingPage() {
                 See all plans
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="bg-white px-6 py-20">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1C1C1C] tracking-tight mb-3">
+              Frequently asked questions
+            </h2>
+            <p className="text-muted-foreground text-lg">Everything you need to know about Beebas.</p>
+          </div>
+          <div className="space-y-4">
+            {FAQ_ITEMS.map(({ q, a }) => (
+              <div key={q} className="rounded-2xl border border-gray-100 bg-gray-50 px-6 py-5">
+                <p className="font-bold text-[#1C1C1C] mb-2">{q}</p>
+                <p className="text-sm text-muted-foreground leading-relaxed">{a}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
