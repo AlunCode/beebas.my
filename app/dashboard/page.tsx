@@ -8,6 +8,7 @@ import { DebtList } from './_components/debt-list'
 import { PayoffCalculator } from './_components/payoff-calculator'
 import { BillingPortalButton } from '@/app/pricing/_components/billing-portal-button'
 import { AdBanner } from './_components/ad-banner'
+import { ToastProvider } from './_components/toast-provider'
 
 export default async function DashboardPage({
   searchParams,
@@ -57,6 +58,7 @@ export default async function DashboardPage({
         </div>
       </nav>
 
+      <ToastProvider>
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Upgrade success banner */}
         {justUpgraded && (
@@ -144,6 +146,7 @@ export default async function DashboardPage({
           </div>
         )}
       </main>
+      </ToastProvider>
     </div>
   )
 }

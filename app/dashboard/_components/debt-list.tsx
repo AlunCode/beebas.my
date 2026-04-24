@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { deleteDebt } from '@/app/actions/debts'
+import { useToast } from './toast-provider'
 import type { Database } from '@/types/database'
 
 type DebtRow = Database['public']['Tables']['debts']['Row']
@@ -30,11 +31,17 @@ interface Props {
 
 export function DebtList({ debts, isPro }: Props) {
   const [deleting, setDeleting] = useState<string | null>(null)
+  const { toast } = useToast()
 
-  async function handleDelete(id: string) {
+  async function handleDelete(id: string, name: string) {
     setDeleting(id)
-    await deleteDebt(id)
+    const result = await deleteDebt(id)
     setDeleting(null)
+    if (result?.error) {
+      toast(result.error, 'error')
+    } else {
+      toast(`"${name}" removed`)
+    }
   }
 
   if (debts.length === 0) return null
@@ -64,7 +71,7 @@ export function DebtList({ debts, isPro }: Props) {
           </div>
 
           <button
-            onClick={() => handleDelete(debt.id)}
+            onClick={() => handleDelete(debt.id, debt.name)}
             disabled={deleting === debt.id}
             className="text-muted-foreground hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50 shrink-0 disabled:opacity-40"
             aria-label="Delete debt"

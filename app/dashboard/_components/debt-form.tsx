@@ -11,6 +11,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 import { addDebt } from '@/app/actions/debts'
+import { useToast } from './toast-provider'
 
 const DEBT_TYPES = [
   { value: 'credit_card',    label: 'Credit Card' },
@@ -34,6 +35,7 @@ export function DebtForm({ debtCount, isPro }: Props) {
   const [loading, setLoading] = useState(false)
   const [debtType, setDebtType] = useState('other')
   const formRef = useRef<HTMLFormElement>(null)
+  const { toast } = useToast()
 
   const atLimit = !isPro && debtCount >= 3
 
@@ -49,6 +51,7 @@ export function DebtForm({ debtCount, isPro }: Props) {
       setOpen(false)
       formRef.current?.reset()
       setDebtType('other')
+      toast('Debt added')
     }
   }
 
