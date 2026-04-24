@@ -35,9 +35,10 @@ function monthsToDate(months: number): string {
 
 interface Props {
   debts: DebtRow[]
+  isPro?: boolean
 }
 
-export function PayoffCalculator({ debts }: Props) {
+export function PayoffCalculator({ debts, isPro = false }: Props) {
   const [extraPayment, setExtraPayment] = useState(0)
   const [strategy, setStrategy] = useState<Strategy>('snowball')
 
@@ -66,7 +67,26 @@ export function PayoffCalculator({ debts }: Props) {
     <div className="space-y-5">
       {/* Strategy toggle */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-3">Payoff strategy</p>
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Payoff strategy</p>
+          {isPro ? (
+            <a
+              href={`/dashboard/export?strategy=${strategy}&extra=${extraPayment}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-bold text-[#1C1C1C] bg-[#FFD000] hover:bg-[#f0c400] px-3 py-1.5 rounded-lg transition-colors"
+            >
+              📄 Export PDF
+            </a>
+          ) : (
+            <a
+              href="/pricing"
+              className="text-xs font-medium text-muted-foreground bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+            >
+              📄 Export PDF · Pro
+            </a>
+          )}
+        </div>
         <div className="flex gap-2">
           {(['snowball', 'avalanche'] as Strategy[]).map(s => (
             <button

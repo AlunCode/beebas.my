@@ -120,7 +120,7 @@ export default async function DashboardPage({
         {debtList.length > 0 && (
           <div>
             <h2 className="text-lg font-extrabold tracking-tight text-[#1C1C1C] mb-4">Payoff Plan</h2>
-            <PayoffCalculator debts={debtList} />
+            <PayoffCalculator debts={debtList} isPro={pro} />
           </div>
         )}
 
