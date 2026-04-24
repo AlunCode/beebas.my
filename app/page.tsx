@@ -112,9 +112,9 @@ export default function LandingPage() {
           <span className="text-[#FFD000] font-bold text-lg tracking-tight">Beebas</span>
         </div>
         <div className="flex items-center gap-3">
-          <Link href="/pricing" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">
-            Pricing
-          </Link>
+          <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">About</Link>
+          <Link href="/pricing" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Pricing</Link>
+          <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">
             Log in
           </Link>
@@ -359,9 +359,11 @@ export default function LandingPage() {
               <span className="text-[#FFD000] font-bold tracking-tight">Beebas</span>
             </div>
             <div className="flex items-center gap-6 text-sm text-white/40">
+              <Link href="/about" className="hover:text-white/70 transition-colors">About</Link>
               <Link href="/pricing" className="hover:text-white/70 transition-colors">Pricing</Link>
+              <Link href="/contact" className="hover:text-white/70 transition-colors">Contact</Link>
+              <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy</Link>
               <Link href="/login" className="hover:text-white/70 transition-colors">Log in</Link>
-              <Link href="/signup" className="hover:text-white/70 transition-colors">Sign up</Link>
             </div>
           </div>
           <div className="border-t border-white/10 mt-8 pt-8 text-center">

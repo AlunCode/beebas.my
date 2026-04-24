@@ -112,7 +112,9 @@ export default async function DashboardPage({
         )}
 
         {/* Ad — between debt list and payoff plan (free users only) */}
-        {!pro && debtList.length > 0 && <AdBanner slot="mid" />}
+        {!pro && debtList.length > 0 && (
+          <AdBanner slot="mid" adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_MID} />
+        )}
 
         {/* Payoff plan */}
         {debtList.length > 0 && (
@@ -122,8 +124,10 @@ export default async function DashboardPage({
           </div>
         )}
 
-        {/* Ad — bottom of page (free users with debts, not already showing upsell banner) */}
-        {!pro && debtList.length > 0 && <AdBanner slot="bottom" />}
+        {/* Ad — bottom of page (free users with debts) */}
+        {!pro && debtList.length > 0 && (
+          <AdBanner slot="bottom" adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM} />
+        )}
 
         {/* Soft upsell for free users with debts */}
         {!pro && debtList.length > 0 && debtList.length < 3 && (

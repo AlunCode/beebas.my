@@ -51,6 +51,8 @@ export default async function PricingPage() {
           <span className="text-[#FFD000] font-bold text-lg tracking-tight">Beebas</span>
         </Link>
         <div className="flex items-center gap-3">
+          <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">About</Link>
+          <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           {user ? (
             <>
               {isPro && <BillingPortalButton />}
