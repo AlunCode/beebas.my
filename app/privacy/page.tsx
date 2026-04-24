@@ -160,6 +160,7 @@ export default function PrivacyPage() {
             <Link href="/blog" className="hover:text-white/70 transition-colors">Blog</Link>
             <Link href="/contact" className="hover:text-white/70 transition-colors">Contact</Link>
             <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white/70 transition-colors">Terms</Link>
             <Link href="/pricing" className="hover:text-white/70 transition-colors">Pricing</Link>
           </div>
         </div>
