@@ -52,6 +52,7 @@ export default async function PricingPage() {
         </Link>
         <div className="flex items-center gap-3">
           <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">About</Link>
+          <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           {user ? (
             <>

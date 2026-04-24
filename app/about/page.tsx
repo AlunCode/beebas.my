@@ -19,6 +19,7 @@ export default function AboutPage() {
         <div className="flex items-center gap-3">
           <Link href="/about" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">About</Link>
           <Link href="/pricing" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Pricing</Link>
+          <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Log in</Link>
           <Link href="/signup">
@@ -117,6 +118,7 @@ export default function AboutPage() {
           </div>
           <div className="flex items-center gap-5 text-xs text-white/40">
             <Link href="/about" className="hover:text-white/70 transition-colors">About</Link>
+            <Link href="/blog" className="hover:text-white/70 transition-colors">Blog</Link>
             <Link href="/contact" className="hover:text-white/70 transition-colors">Contact</Link>
             <Link href="/privacy" className="hover:text-white/70 transition-colors">Privacy Policy</Link>
             <Link href="/pricing" className="hover:text-white/70 transition-colors">Pricing</Link>
