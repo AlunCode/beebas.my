@@ -105,6 +105,8 @@ export interface Database {
           email: string
           stripe_customer_id: string | null
           subscription_status: subscription_status
+          partner_id: string | null
+          couple_invite_code: string | null
           created_at: string
           updated_at: string
         }
@@ -113,6 +115,8 @@ export interface Database {
           email: string
           stripe_customer_id?: string | null
           subscription_status?: subscription_status
+          partner_id?: string | null
+          couple_invite_code?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -121,6 +125,8 @@ export interface Database {
           email?: string
           stripe_customer_id?: string | null
           subscription_status?: subscription_status
+          partner_id?: string | null
+          couple_invite_code?: string | null
           created_at?: string
           updated_at?: string
         }

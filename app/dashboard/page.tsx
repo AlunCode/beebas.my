@@ -9,22 +9,38 @@ import { PayoffCalculator } from './_components/payoff-calculator'
 import { BillingPortalButton } from '@/app/pricing/_components/billing-portal-button'
 import { AdBanner } from './_components/ad-banner'
 import { ToastProvider } from './_components/toast-provider'
+import { CoupleModeCard } from './_components/couple-mode'
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string }>
+  searchParams: Promise<{ upgraded?: string; coupled?: string }>
 }) {
   const user = await getAuthUser()
   const pro = isPro(user)
   const params = await searchParams
   const justUpgraded = params.upgraded === 'true'
+  const justCoupled = params.coupled === 'true'
 
   const supabase = await createClient()
+
+  // Fetch partner email when in couple mode
+  let partnerEmail: string | null = null
+  if (user.partner_id) {
+    const { data: partner } = await supabase
+      .from('users')
+      .select('email')
+      .eq('id', user.partner_id)
+      .single()
+    partnerEmail = partner?.email ?? null
+  }
+
+  // Fetch debts for current user + partner (if linked)
+  const userIds = user.partner_id ? [user.id, user.partner_id] : [user.id]
   const { data: debts } = await supabase
     .from('debts')
     .select('*')
-    .eq('user_id', user.id)
+    .in('user_id', userIds)
     .order('created_at', { ascending: true })
 
   const debtList = debts ?? []
@@ -71,6 +87,17 @@ export default async function DashboardPage({
           </div>
         )}
 
+        {/* Couple mode linked banner */}
+        {justCoupled && (
+          <div className="rounded-2xl bg-emerald-50 border border-emerald-200 px-5 py-4 flex items-center gap-3">
+            <span className="text-2xl">👫</span>
+            <div>
+              <p className="font-bold text-emerald-800">Couple mode active!</p>
+              <p className="text-sm text-emerald-700">You and your partner are now sharing a debt plan. You can both see and manage debts together.</p>
+            </div>
+          </div>
+        )}
+
         {/* Header */}
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -79,7 +106,7 @@ export default async function DashboardPage({
               {debtList.length === 0
                 ? 'Add your first debt to get started.'
                 : `${debtList.length} debt${debtList.length > 1 ? 's' : ''} · ${
-                    !pro ? `${debtList.length}/3 free plan` : 'Pro plan · unlimited'
+                    !pro ? `${debtList.length}/3 free plan` : user.partner_id ? 'Couple mode · Pro' : 'Pro plan · unlimited'
                   }`}
             </p>
           </div>
@@ -130,6 +157,14 @@ export default async function DashboardPage({
         {!pro && debtList.length > 0 && (
           <AdBanner slot="bottom" adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM} />
         )}
+
+        {/* Couple mode card */}
+        <CoupleModeCard
+          isPro={pro}
+          partnerId={user.partner_id}
+          partnerEmail={partnerEmail}
+          existingCode={user.couple_invite_code}
+        />
 
         {/* Soft upsell for free users with debts */}
         {!pro && debtList.length > 0 && debtList.length < 3 && (
