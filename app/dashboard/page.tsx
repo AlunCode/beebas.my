@@ -11,6 +11,7 @@ import { AdBanner } from './_components/ad-banner'
 import { ToastProvider } from './_components/toast-provider'
 import { CoupleModeCard } from './_components/couple-mode'
 import { DigestSettings } from './_components/digest-settings'
+import { MilestoneBadges } from './_components/milestone-badges'
 
 export default async function DashboardPage({
   searchParams,
@@ -36,15 +37,15 @@ export default async function DashboardPage({
     partnerEmail = partner?.email ?? null
   }
 
-  // Fetch debts for current user + partner (if linked)
+  // Fetch debts for current user + partner (if linked) and earned milestones in parallel
   const userIds = user.partner_id ? [user.id, user.partner_id] : [user.id]
-  const { data: debts } = await supabase
-    .from('debts')
-    .select('*')
-    .in('user_id', userIds)
-    .order('created_at', { ascending: true })
+  const [{ data: debts }, { data: milestones }] = await Promise.all([
+    supabase.from('debts').select('*').in('user_id', userIds).order('created_at', { ascending: true }),
+    supabase.from('milestones').select('type').eq('user_id', user.id),
+  ])
 
   const debtList = debts ?? []
+  const earnedMilestones = (milestones ?? []).map(m => m.type)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,6 +167,9 @@ export default async function DashboardPage({
           partnerEmail={partnerEmail}
           existingCode={user.couple_invite_code}
         />
+
+        {/* Milestone badges */}
+        <MilestoneBadges earned={earnedMilestones} isPro={pro} />
 
         {/* Email digest settings — Pro only */}
         {pro && <DigestSettings optedOut={user.digest_opted_out ?? false} />}

@@ -18,6 +18,7 @@ export interface Database {
           interest_rate: number
           minimum_payment: number
           debt_type: debt_type
+          original_balance: number | null
           created_at: string
           updated_at: string
         }
@@ -29,6 +30,7 @@ export interface Database {
           interest_rate: number
           minimum_payment: number
           debt_type?: debt_type
+          original_balance?: number | null
           created_at?: string
           updated_at?: string
         }
@@ -40,6 +42,7 @@ export interface Database {
           interest_rate?: number
           minimum_payment?: number
           debt_type?: debt_type
+          original_balance?: number | null
           created_at?: string
           updated_at?: string
         }
