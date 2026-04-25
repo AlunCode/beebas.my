@@ -107,6 +107,8 @@ export interface Database {
           subscription_status: subscription_status
           partner_id: string | null
           couple_invite_code: string | null
+          digest_opted_out: boolean
+          digest_last_sent: string | null
           created_at: string
           updated_at: string
         }
@@ -117,6 +119,8 @@ export interface Database {
           subscription_status?: subscription_status
           partner_id?: string | null
           couple_invite_code?: string | null
+          digest_opted_out?: boolean
+          digest_last_sent?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -127,6 +131,8 @@ export interface Database {
           subscription_status?: subscription_status
           partner_id?: string | null
           couple_invite_code?: string | null
+          digest_opted_out?: boolean
+          digest_last_sent?: string | null
           created_at?: string
           updated_at?: string
         }

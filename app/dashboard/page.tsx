@@ -10,6 +10,7 @@ import { BillingPortalButton } from '@/app/pricing/_components/billing-portal-bu
 import { AdBanner } from './_components/ad-banner'
 import { ToastProvider } from './_components/toast-provider'
 import { CoupleModeCard } from './_components/couple-mode'
+import { DigestSettings } from './_components/digest-settings'
 
 export default async function DashboardPage({
   searchParams,
@@ -165,6 +166,9 @@ export default async function DashboardPage({
           partnerEmail={partnerEmail}
           existingCode={user.couple_invite_code}
         />
+
+        {/* Email digest settings — Pro only */}
+        {pro && <DigestSettings optedOut={user.digest_opted_out ?? false} />}
 
         {/* Soft upsell for free users with debts */}
         {!pro && debtList.length > 0 && debtList.length < 3 && (
