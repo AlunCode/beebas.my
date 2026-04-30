@@ -19,6 +19,7 @@ export interface Database {
           minimum_payment: number
           debt_type: debt_type
           original_balance: number | null
+          custom_category: string | null
           created_at: string
           updated_at: string
         }
@@ -31,6 +32,7 @@ export interface Database {
           minimum_payment: number
           debt_type?: debt_type
           original_balance?: number | null
+          custom_category?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -43,6 +45,7 @@ export interface Database {
           minimum_payment?: number
           debt_type?: debt_type
           original_balance?: number | null
+          custom_category?: string | null
           created_at?: string
           updated_at?: string
         }

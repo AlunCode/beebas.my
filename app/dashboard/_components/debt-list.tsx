@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { deleteDebt, markDebtPaid } from '@/app/actions/debts'
 import { useToast } from './toast-provider'
+import { EditDebtDialog } from './edit-debt-dialog'
 import type { milestone_type } from '@/types/database'
 
 const MILESTONE_TOASTS: Record<milestone_type, string> = {
@@ -86,7 +87,7 @@ export function DebtList({ debts, isPro }: Props) {
                 variant="secondary"
                 className="text-xs shrink-0 bg-[#FFF8DC] text-[#8B6000] border-[#FFD000]/30 rounded-full"
               >
-                {TYPE_LABELS[debt.debt_type] ?? 'Other'}
+                {debt.custom_category ?? TYPE_LABELS[debt.debt_type] ?? 'Other'}
               </Badge>
             </div>
             <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-muted-foreground">
@@ -105,6 +106,7 @@ export function DebtList({ debts, isPro }: Props) {
             >
               {paying === debt.id ? '…' : '✓ Paid off'}
             </button>
+            <EditDebtDialog debt={debt} isPro={isPro} />
             <button
               onClick={() => handleDelete(debt.id, debt.name)}
               disabled={deleting === debt.id || paying === debt.id}
