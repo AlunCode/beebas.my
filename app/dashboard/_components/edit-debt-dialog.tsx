@@ -56,7 +56,7 @@ export function EditDebtDialog({ debt, isPro }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      <DialogTrigger render={
         <button
           className="text-muted-foreground hover:text-[#1C1C1C] transition-colors p-1.5 rounded-lg hover:bg-gray-100"
           aria-label="Edit debt"
@@ -66,7 +66,7 @@ export function EditDebtDialog({ debt, isPro }: Props) {
             <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
           </svg>
         </button>
-      </DialogTrigger>
+      } />
 
       <DialogContent className="sm:max-w-md rounded-2xl">
         <DialogHeader>
