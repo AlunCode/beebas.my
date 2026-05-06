@@ -45,6 +45,7 @@ export default async function DashboardPage({
   ])
 
   const debtList = debts ?? []
+  const visibleDebts = pro ? debtList : debtList.slice(0, 3)
   const earnedMilestones = (milestones ?? []).map(m => m.type)
 
   return (
@@ -108,15 +109,21 @@ export default async function DashboardPage({
               {debtList.length === 0
                 ? 'Add your first debt to get started.'
                 : `${debtList.length} debt${debtList.length > 1 ? 's' : ''} · ${
-                    !pro ? `${debtList.length}/3 free plan` : user.partner_id ? 'Couple mode · Pro' : 'Pro plan · unlimited'
+                    !pro
+                      ? debtList.length <= 3
+                        ? `${debtList.length}/3 free plan`
+                        : 'free plan'
+                      : user.partner_id
+                        ? 'Couple mode · Pro'
+                        : 'Pro plan · unlimited'
                   }`}
             </p>
           </div>
           <DebtForm debtCount={debtList.length} isPro={pro} />
         </div>
 
-        {/* Free plan limit banner */}
-        {!pro && debtList.length >= 3 && (
+        {/* Free plan limit banner — only when exactly at the limit (hidden debts card handles >3) */}
+        {!pro && debtList.length === 3 && (
           <div className="rounded-2xl bg-[#FFF8DC] border border-[#FFD000]/40 px-5 py-4 flex items-center justify-between gap-4">
             <div>
               <p className="font-bold text-[#1C1C1C] text-sm">You've hit the 3-debt free plan limit</p>
@@ -131,7 +138,7 @@ export default async function DashboardPage({
         )}
 
         {/* Debt list */}
-        {debtList.length > 0 && <DebtList debts={debtList} isPro={pro} />}
+        {debtList.length > 0 && <DebtList debts={visibleDebts} totalCount={debtList.length} isPro={pro} />}
 
         {/* Empty state */}
         {debtList.length === 0 && (
@@ -148,10 +155,10 @@ export default async function DashboardPage({
         )}
 
         {/* Payoff plan */}
-        {debtList.length > 0 && (
+        {visibleDebts.length > 0 && (
           <div>
             <h2 className="text-lg font-extrabold tracking-tight text-[#1C1C1C] mb-4">Payoff Plan</h2>
-            <PayoffCalculator debts={debtList} isPro={pro} />
+            <PayoffCalculator debts={visibleDebts} isPro={pro} />
           </div>
         )}
 

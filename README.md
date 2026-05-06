@@ -2,7 +2,7 @@
 
 Malaysia's debt snowball & avalanche tracker. Enter your debts, pick a strategy, and see your exact debt-free date.
 
-**Stack:** Next.js 16 · Supabase · Stripe · Tailwind CSS v4 · shadcn/ui (Base UI)
+**Stack:** Next.js 16 · Supabase · Stripe · Resend · Tailwind CSS v4 · shadcn/ui (Base UI)
 
 ---
 
@@ -11,6 +11,7 @@ Malaysia's debt snowball & avalanche tracker. Enter your debts, pick a strategy,
 - Node.js 20+
 - A [Supabase](https://supabase.com) project
 - A [Stripe](https://stripe.com) account (test mode is fine)
+- A [Resend](https://resend.com) account with verified domain
 - Stripe CLI (for local webhook forwarding)
 
 ---
@@ -42,9 +43,20 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 STRIPE_PRO_MONTHLY_PRICE_ID=price_...
 STRIPE_PRO_ANNUAL_PRICE_ID=price_...
 
+# Email (Resend)
+RESEND_API_KEY=re_...
+
+# Cron job auth
+CRON_SECRET=<random-string>
+
 # App
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
+
+# Google AdSense (optional)
+NEXT_PUBLIC_ADSENSE_PUBLISHER_ID=ca-pub-...
+NEXT_PUBLIC_ADSENSE_SLOT_MID=
+NEXT_PUBLIC_ADSENSE_SLOT_BOTTOM=
 ```
 
 **Where to find these:**
@@ -56,31 +68,29 @@ NEXT_PUBLIC_SITE_URL=http://localhost:3000
 | Stripe keys | Stripe dashboard → Developers → API keys |
 | Stripe webhook secret | See step 5 |
 | Price IDs | Stripe dashboard → Product catalogue → your Pro products |
+| Resend API key | Resend dashboard → API Keys |
+| Cron secret | Generate any random string: `openssl rand -hex 32` |
 
 ---
 
 ## 3. Database setup
 
-Run the migration against your Supabase project. You can do this two ways:
+Run all migrations in order against your Supabase project via the SQL editor:
 
-**Option A — Supabase SQL editor**
+| File | What it creates |
+|---|---|
+| `supabase/migrations/001_initial_schema.sql` | Base schema, RLS policies, triggers |
+| `supabase/migrations/20260425_couple_mode.sql` | `partner_id`, `couple_invite_code`, updated RLS |
+| `supabase/migrations/20260425_digest.sql` | `digest_opted_out`, `digest_last_sent` on users |
+| `supabase/migrations/20260425_milestones.sql` | `milestones` table + `milestone_type` enum |
+| `supabase/migrations/20260425_custom_categories.sql` | `custom_category` column on debts |
 
-Copy the contents of `supabase/migrations/001_initial_schema.sql` and run it in the Supabase dashboard SQL editor.
-
-**Option B — psql direct connection**
-
-```bash
-psql "<your-direct-connection-string>" -f supabase/migrations/001_initial_schema.sql
-```
-
-The migration creates:
-
-- `users` table — linked to Supabase Auth, stores `stripe_customer_id` and `subscription_status`
-- `debts` table — each user's individual debts (name, balance, interest rate, min payment, type)
+The base schema creates:
+- `users` table — linked to Supabase Auth, stores subscription status, couple mode, digest settings
+- `debts` table — debts with balance, interest rate, min payment, type, custom category
 - `payments` table — payment history log
-- `milestones` table — badges earned
-- 3 enums: `debt_type`, `milestone_type`, `subscription_status`
-- Row-Level Security (RLS) policies — users can only read/write their own rows
+- `milestones` table — badges earned by Pro users
+- RLS policies — users can only read/write their own rows (couple mode adds partner read access)
 - `handle_new_user` trigger — auto-inserts a row in `users` on Auth signup
 - `check_debt_limit` trigger — enforces 3-debt limit for free-tier users at DB level
 
@@ -88,7 +98,7 @@ The migration creates:
 
 ## 4. Supabase Auth — email confirmation template
 
-In the Supabase dashboard go to **Authentication → Email Templates → Confirm signup** and set the redirect URL to use `token_hash` (required for the SSR PKCE flow):
+In the Supabase dashboard go to **Authentication → Email Templates → Confirm signup** and set the redirect URL to:
 
 ```
 {{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&next=/dashboard
@@ -96,7 +106,7 @@ In the Supabase dashboard go to **Authentication → Email Templates → Confirm
 
 > **Why:** Next.js Server Actions generate the PKCE verifier server-side. When the user clicks the email link in a different browser tab the verifier is gone. Using `token_hash` + `verifyOtp` avoids this entirely.
 
-During local development you can disable email confirmation entirely under **Authentication → Providers → Email → Confirm email** to skip this step.
+During local development you can disable email confirmation under **Authentication → Providers → Email → Confirm email**.
 
 ---
 
@@ -104,14 +114,14 @@ During local development you can disable email confirmation entirely under **Aut
 
 **Products**
 
-Create two products in the Stripe dashboard (or test mode):
+Create two products in the Stripe dashboard:
 
 | Product | Price | Billing |
 |---|---|---|
 | Beebas Pro | RM 19.00 | Monthly recurring |
 | Beebas Pro Annual | RM 149.00 | Yearly recurring |
 
-Copy each price's ID into `.env.local` as `STRIPE_PRO_MONTHLY_PRICE_ID` and `STRIPE_PRO_ANNUAL_PRICE_ID`.
+Copy each price's ID into `.env.local`.
 
 **Local webhook forwarding**
 
@@ -119,11 +129,11 @@ Copy each price's ID into `.env.local` as `STRIPE_PRO_MONTHLY_PRICE_ID` and `STR
 stripe listen --forward-to localhost:3000/api/stripe/webhook
 ```
 
-Copy the `whsec_...` secret printed by the CLI into `.env.local` as `STRIPE_WEBHOOK_SECRET`.
+Copy the `whsec_...` secret into `.env.local` as `STRIPE_WEBHOOK_SECRET`.
 
 The webhook handler at `app/api/stripe/webhook/route.ts` listens for:
-- `checkout.session.completed` — sets `subscription_status = 'pro'`
-- `customer.subscription.deleted` — reverts to `subscription_status = 'free'`
+- `customer.subscription.created` / `customer.subscription.updated` — sets `subscription_status = 'pro'` or `'free'`
+- `customer.subscription.deleted` — sets `subscription_status = 'cancelled'` (data is kept, just restricted)
 
 **Test card:** `4242 4242 4242 4242` · any future expiry · any CVV
 
@@ -158,54 +168,79 @@ Tests live in `lib/calculator/__tests__/engine.test.ts` — 18 unit tests coveri
 ## Project structure
 
 ```
-beebas/
+debtfree/
 ├── app/
-│   ├── page.tsx                        # Landing page (public)
+│   ├── page.tsx                        # Landing page + FAQ + free calculator widget
 │   ├── layout.tsx                      # Root layout + SEO metadata
-│   ├── globals.css                     # Tailwind theme, brand colours, font import
+│   ├── not-found.tsx                   # Custom 404
+│   ├── robots.ts / sitemap.ts          # SEO
+│   ├── icon.tsx / apple-icon.tsx       # Favicon (generated)
+│   ├── og-image.png/route.tsx          # Dynamic OG image (Edge runtime)
 │   ├── _components/
-│   │   └── interest-calculator.tsx     # Free calculator widget (no login)
-│   ├── og-image.png/
-│   │   └── route.tsx                   # Dynamic OG image (Edge runtime)
+│   │   ├── interest-calculator.tsx     # Free calculator widget (no login required)
+│   │   └── public-ad-banner.tsx        # AdSense for public pages
+│   ├── actions/
+│   │   ├── debts.ts                    # addDebt, updateDebt, deleteDebt, markDebtPaid
+│   │   ├── couple.ts                   # generateInviteCode, acceptInvite, leaveCouple
+│   │   ├── digest.ts                   # setDigestOptOut, unsubscribeByUid
+│   │   └── contact.ts                  # sendContactMessage (via Resend)
+│   ├── api/
+│   │   ├── stripe/checkout/route.ts    # Create Stripe Checkout session
+│   │   ├── stripe/portal/route.ts      # Create Stripe Billing Portal session
+│   │   ├── stripe/webhook/route.ts     # Handle subscription lifecycle events
+│   │   └── cron/monthly-digest/route.ts # Monthly email digest (Bearer auth)
 │   ├── (auth)/
 │   │   ├── login/page.tsx
 │   │   └── signup/page.tsx
-│   ├── auth/
-│   │   └── confirm/route.ts            # Email confirmation (token_hash + PKCE)
+│   ├── auth/confirm/route.ts           # Email confirmation (token_hash + PKCE)
 │   ├── dashboard/
-│   │   ├── page.tsx                    # Server Component — fetches debts
+│   │   ├── page.tsx                    # Server Component — fetches debts + milestones
+│   │   ├── export/page.tsx             # Print-optimised PDF export (Pro only)
 │   │   └── _components/
-│   │       ├── debt-form.tsx           # Add/edit debt dialog
-│   │       ├── debt-list.tsx           # Debt cards with delete
-│   │       ├── payoff-calculator.tsx   # Strategy toggle, slider, stats
-│   │       └── payoff-chart.tsx        # Recharts stacked area chart
-│   ├── pricing/
-│   │   ├── page.tsx                    # 3-plan pricing (Free / Pro Monthly / Annual)
-│   │   └── _components/
-│   │       ├── upgrade-button.tsx      # → /api/stripe/checkout
-│   │       └── billing-portal-button.tsx # → /api/stripe/portal
-│   └── api/stripe/
-│       ├── checkout/route.ts           # Creates Stripe Checkout session
-│       ├── portal/route.ts             # Creates Stripe Billing Portal session
-│       └── webhook/route.ts            # Handles Stripe events
+│   │       ├── debt-form.tsx           # Add debt dialog (Pro: custom category field)
+│   │       ├── debt-list.tsx           # Debt cards + mark paid + edit + delete
+│   │       ├── edit-debt-dialog.tsx    # Edit debt dialog
+│   │       ├── payoff-calculator.tsx   # Strategy toggle, slider, stats, export link
+│   │       ├── payoff-chart.tsx        # Recharts stacked area chart
+│   │       ├── couple-mode.tsx         # Couple mode card (generate/accept/leave)
+│   │       ├── milestone-badges.tsx    # Badge grid (Pro only)
+│   │       ├── digest-settings.tsx     # Monthly digest opt-out toggle
+│   │       ├── ad-banner.tsx           # AdSense for dashboard (free users)
+│   │       └── toast-provider.tsx      # Toast context + useToast() hook
+│   ├── invite/[code]/
+│   │   ├── page.tsx                    # Couple invite acceptance page
+│   │   └── _components/accept-button.tsx
+│   ├── blog/
+│   │   ├── page.tsx                    # Blog index
+│   │   └── <slug>/page.tsx             # 4 articles with Article JSON-LD
+│   ├── pricing/page.tsx                # Pricing tiers + FAQ
+│   ├── about/page.tsx
+│   ├── contact/
+│   │   ├── page.tsx
+│   │   └── _components/contact-form.tsx # Client form → Resend server action
+│   ├── privacy/page.tsx
+│   ├── terms/page.tsx
+│   └── unsubscribe/page.tsx            # Email digest unsubscribe
 ├── lib/
 │   ├── calculator/
-│   │   ├── engine.ts                   # Snowball/avalanche simulation engine
+│   │   ├── engine.ts                   # Snowball/avalanche simulation (600-month cap)
 │   │   ├── types.ts                    # CalculatorInput, PayoffResult types
 │   │   └── __tests__/engine.test.ts
 │   ├── supabase/
 │   │   ├── client.ts                   # Browser client
 │   │   ├── server.ts                   # Server Component / Server Action client
+│   │   ├── admin.ts                    # Service-role client (cron + webhooks)
 │   │   └── middleware.ts               # Session refresh helper
 │   ├── auth/
 │   │   ├── actions.ts                  # login, signup, logout Server Actions
 │   │   └── get-user.ts                 # getAuthUser(), isPro() helpers
+│   ├── email.ts                        # getResend() lazy singleton + buildDigestHtml()
 │   └── stripe.ts                       # Stripe client singleton
 ├── types/
-│   └── database.ts                     # Supabase-generated DB types
-├── supabase/
-│   └── migrations/
-│       └── 001_initial_schema.sql
+│   └── database.ts                     # Supabase schema types
+├── components/ui/                      # shadcn/ui components (Base UI)
+├── supabase/migrations/                # 5 migration files
+├── vercel.json                         # Cron: 0 8 1 * * → /api/cron/monthly-digest
 └── proxy.ts                            # Next.js 16 middleware (replaces middleware.ts)
 ```
 
@@ -215,14 +250,13 @@ beebas/
 
 ### Next.js 16 — breaking changes
 
-This project uses Next.js **16.2.4** which has breaking changes vs earlier versions:
-
 - `middleware.ts` is deprecated — use `proxy.ts` with an export named `proxy`
-- `next/font/google` may fail at build time on machines without internet access — use CSS `@import` in `globals.css` instead
+- `searchParams` in page props is a `Promise<...>` — must be awaited
+- `next/font/google` may fail at build time without internet — use CSS `@import` in `globals.css` instead
 
 ### shadcn/ui — Base UI (not Radix)
 
-This version of shadcn uses `@base-ui/react` instead of Radix UI. Key differences:
+This version of shadcn uses `@base-ui/react` instead of Radix UI:
 
 - No `asChild` prop — use `render={<Button />}` instead
 - `Select.onValueChange` passes `string | null` — guard with `if (v !== null)`
@@ -232,11 +266,15 @@ This version of shadcn uses `@base-ui/react` instead of Radix UI. Key difference
 
 `types/database.ts` must include `Relationships: []` on every table and `CompositeTypes: Record<string, never>` in the schema — without these the supabase-js v2 `Update` types resolve to `never`.
 
+### Resend — lazy singleton
+
+`lib/email.ts` exports `getResend()` instead of a top-level instance to avoid "Missing API key" build errors when `RESEND_API_KEY` is not set at build time.
+
 ### Brand colours
 
 | Token | Value | Usage |
 |---|---|---|
-| Yellow | `#FFD000` | Primary CTA, accents, logo bg |
+| Yellow | `#FFD000` | Primary CTA, accents, logo |
 | Charcoal | `#1C1C1C` | Navbar, dark sections, text |
 | Font | Plus Jakarta Sans | Loaded via CSS `@import` |
 
@@ -257,7 +295,7 @@ This version of shadcn uses `@base-ui/react` instead of Radix UI. Key difference
 | Custom debt categories | — | ✓ |
 | Priority support | — | ✓ |
 
-The 3-debt limit is enforced at two layers: the UI disables the "Add debt" button, and a Postgres trigger (`check_debt_limit`) rejects the insert at DB level.
+**Cancellation behaviour:** when a Pro user cancels, `subscription_status` is set to `'cancelled'`. All debt data is kept. Only the first 3 debts are shown; the rest are hidden behind a locked card until they re-subscribe.
 
 ---
 
@@ -266,6 +304,7 @@ The 3-debt limit is enforced at two layers: the UI disables the "Add debt" butto
 1. Push to GitHub
 2. Import repo in [Vercel](https://vercel.com)
 3. Add all `.env.local` variables as Vercel Environment Variables
-4. Set `NEXT_PUBLIC_SITE_URL` to your production domain (e.g. `https://beebas.my`)
-5. In Stripe dashboard, add a production webhook endpoint pointing to `https://beebas.my/api/stripe/webhook` and update `STRIPE_WEBHOOK_SECRET`
-6. In Supabase Auth settings, add your production domain to the allowed redirect URLs
+4. Set `NEXT_PUBLIC_APP_URL` and `NEXT_PUBLIC_SITE_URL` to `https://beebas.my`
+5. Point `beebas.my` DNS to Vercel (A/CNAME record in Cloudflare)
+6. In Stripe dashboard, add production webhook `https://beebas.my/api/stripe/webhook` and update `STRIPE_WEBHOOK_SECRET`
+7. In Supabase Auth settings, add `https://beebas.my` to allowed redirect URLs

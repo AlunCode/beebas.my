@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
+import { ContactForm } from './_components/contact-form'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -45,13 +44,13 @@ export default function ContactPage() {
         {/* Contact options */}
         <div className="grid sm:grid-cols-2 gap-4 mb-10">
           <a
-            href="mailto:hello@beebas.my"
+            href="mailto:admin@beebas.my"
             className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5 flex items-start gap-4 hover:shadow-md transition-shadow"
           >
             <div className="w-10 h-10 rounded-xl bg-[#FFF8DC] flex items-center justify-center text-xl shrink-0">📧</div>
             <div>
               <p className="font-bold text-[#1C1C1C] text-sm mb-0.5">Email us</p>
-              <p className="text-xs text-muted-foreground">hello@beebas.my</p>
+              <p className="text-xs text-muted-foreground">admin@beebas.my</p>
               <p className="text-xs text-muted-foreground mt-1">Typical reply within 24 hours</p>
             </div>
           </a>
@@ -66,76 +65,7 @@ export default function ContactPage() {
 
         <PublicAdBanner className="mb-6" />
 
-        {/* Contact form — posts via mailto */}
-        <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-6 sm:p-8">
-          <h2 className="font-extrabold text-[#1C1C1C] text-lg mb-6">Send a message</h2>
-          <form
-            action="mailto:hello@beebas.my"
-            method="POST"
-            encType="text/plain"
-            className="space-y-5"
-          >
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  Your name
-                </Label>
-                <Input
-                  name="name"
-                  type="text"
-                  placeholder="Ahmad"
-                  required
-                  className="h-11 rounded-xl text-base"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                  Email address
-                </Label>
-                <Input
-                  name="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  required
-                  className="h-11 rounded-xl text-base"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Subject
-              </Label>
-              <Input
-                name="subject"
-                type="text"
-                placeholder="Feature request / Bug / General question"
-                required
-                className="h-11 rounded-xl text-base"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                Message
-              </Label>
-              <textarea
-                name="body"
-                rows={5}
-                placeholder="Tell us what's on your mind..."
-                required
-                className="w-full rounded-xl border border-input bg-background px-3 py-2.5 text-base resize-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full h-12 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none"
-            >
-              Send message →
-            </Button>
-          </form>
-        </div>
+        <ContactForm />
       </main>
 
       {/* Footer */}

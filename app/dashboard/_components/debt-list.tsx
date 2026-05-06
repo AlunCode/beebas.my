@@ -37,10 +37,11 @@ function fmt(n: number) {
 
 interface Props {
   debts: DebtRow[]
+  totalCount: number
   isPro: boolean
 }
 
-export function DebtList({ debts, isPro }: Props) {
+export function DebtList({ debts, totalCount, isPro }: Props) {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [paying, setPaying] = useState<string | null>(null)
   const { toast } = useToast()
@@ -128,13 +129,30 @@ export function DebtList({ debts, isPro }: Props) {
         </div>
       ))}
 
-      {!isPro && (
+      {!isPro && totalCount <= 3 && (
         <p className="text-xs text-center text-muted-foreground pt-1">
           {debts.length}/3 debts used on free plan.{' '}
-          {debts.length >= 3 && (
-            <span className="font-semibold text-[#1C1C1C]">Upgrade for unlimited.</span>
-          )}
+          {debts.length >= 3 && <span className="font-semibold text-[#1C1C1C]">Upgrade for unlimited.</span>}
         </p>
+      )}
+
+      {!isPro && totalCount > 3 && (
+        <div className="rounded-2xl border-2 border-dashed border-[#FFD000]/40 bg-[#FFF8DC]/50 px-5 py-4 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <span className="text-xl">🔒</span>
+            <div>
+              <p className="font-bold text-[#1C1C1C] text-sm">
+                {totalCount - debts.length} more debt{totalCount - debts.length > 1 ? 's' : ''} hidden
+              </p>
+              <p className="text-xs text-[#8B6000] mt-0.5">
+                Your data is safe — re-subscribe to Pro to see all {totalCount} debts.
+              </p>
+            </div>
+          </div>
+          <a href="/pricing" className="shrink-0 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-sm px-4 h-9 flex items-center transition-colors">
+            Resubscribe →
+          </a>
+        </div>
       )}
     </div>
   )
