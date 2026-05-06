@@ -38,6 +38,14 @@ function formatDate(dateStr: string) {
 }
 
 export function PayoffChart({ result }: Props) {
+  if (!result.months.length) {
+    return (
+      <div className="h-[280px] flex items-center justify-center text-sm text-muted-foreground">
+        No data to display.
+      </div>
+    )
+  }
+
   const sampled = sampleMonths(result.months)
 
   // Build chart data: one object per month with each debt's balance as a key

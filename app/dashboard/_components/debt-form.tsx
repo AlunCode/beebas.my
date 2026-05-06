@@ -63,6 +63,7 @@ export function DebtForm({ debtCount, isPro }: Props) {
         render={
           <Button
             disabled={atLimit}
+            data-debt-form-trigger
             className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none"
             title={atLimit ? 'Upgrade to Pro for unlimited debts' : undefined}
           />

@@ -288,12 +288,15 @@ This version of shadcn uses `@base-ui/react` instead of Radix UI:
 | Snowball & avalanche | ✓ | ✓ |
 | Payoff chart | ✓ | ✓ |
 | Extra payment simulator | ✓ | ✓ |
+| 3-step onboarding wizard | ✓ | ✓ |
 | PDF payoff plan export | — | ✓ |
 | Couple / family mode | — | ✓ |
 | Monthly email digest | — | ✓ |
 | Milestone badges | — | ✓ |
 | Custom debt categories | — | ✓ |
 | Priority support | — | ✓ |
+
+**Free trial:** Pro comes with a 14-day free trial. Stripe passes `trial_period_days: 14`; webhook treats `trialing` status as Pro.
 
 **Cancellation behaviour:** when a Pro user cancels, `subscription_status` is set to `'cancelled'`. All debt data is kept. Only the first 3 debts are shown; the rest are hidden behind a locked card until they re-subscribe.
 

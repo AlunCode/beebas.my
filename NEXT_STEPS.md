@@ -15,8 +15,8 @@
 | 1 | Daftar SSM sole proprietor | ✅ | Approved |
 | 2 | Beli domain `beebas.my` | ✅ | Cloudflare |
 | 3 | Setup email (`admin@beebas.my`) | ✅ | Gmail (adminbeebas@gmail.com) + Send As via Cloudflare DNS |
-| 4 | Daftar akaun bank | ⏳ | Tunggu invitation dari AEON Bank Biz |
-| 5 | Connect bank ke Stripe | ⬜ | Buat selepas ada akaun bank |
+| 4 | Daftar akaun bank | ⏳ | Tunggu invitation dari AEON Bank Biz — boleh skip for now |
+| 5 | Connect bank ke Stripe | ⬜ | Skip for now — Stripe holds funds until bank connected |
 
 ### Email & Cron
 | # | Task | Status | Notes |
@@ -34,8 +34,8 @@
 ### Code
 | # | Task | Status | Notes |
 |---|---|---|---|
-| 11 | Push code to GitHub | ⬜ | Fix SSH key or switch to HTTPS |
-| 12 | Commit contact form Resend changes | ⬜ | Ready to commit |
+| 11 | Push code to GitHub | ✅ | |
+| 12 | Commit contact form Resend changes | ✅ | Committed in last batch |
 
 ---
 
@@ -118,12 +118,30 @@ Site is live at `beebas.my` but not publicized. Test everything yourself first.
 
 ---
 
-## Phase 5 — Growth (after first 10 users)
+## Phase 5 — Pre-launch Improvements (before or after public launch)
+
+### 🔴 High Impact
+| # | Feature | Status | Notes |
+|---|---|---|---|
+| A | **14-day free trial for Pro** | ✅ | `trial_period_days: 14` in Stripe checkout; webhook treats `trialing` as pro |
+| B | **Onboarding flow** | ✅ | 3-step wizard replaces empty dashboard state |
+| C | **Social proof on landing page** | ✅ | "200+ users" stat, hero social proof line, pricing teaser updated |
+
+### 🟡 Medium Impact
+| # | Feature | Status | Notes |
+|---|---|---|---|
+| D | **Payoff chart empty state** | ✅ | Illustrated empty state with CTA; PayoffChart guards against empty months |
+| E | **Google Analytics / Plausible** | ⬜ | Plausible.io ~RM19/month, or Google Analytics (free) |
+
+---
+
+## Phase 6 — Growth (after first 10 users)
 
 | Task | Notes |
 |---|---|
 | TikTok/Reels demos | Show debt-free date calculator live |
-| SEO blog posts in BM | `cara bayar hutang PTPTN`, `kalkulator faedah kad kredit` |
+| **4 more blog articles in BM** | BM articles rank better for local search — `cara bayar hutang PTPTN`, `kalkulator faedah kad kredit` |
+| **Debt-free date shareable card** | "I'll be debt free by Dec 2027! 🎉" with Beebas branding — powerful viral loop |
 | Reach out to AKPK for partnership | |
 | Micro-influencers (RM300–800/post) | After 5 testimonials |
 
@@ -138,3 +156,5 @@ In Supabase dashboard → Authentication → Email Templates → Confirm signup:
 ```
 
 Required for PKCE flow to work when user opens confirmation email in a different browser tab.
+
+

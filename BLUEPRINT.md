@@ -37,8 +37,10 @@ Malaysia household debt stands at RM1.65 trillion (84.3% of GDP). There are zero
 | Plan | Price | Limits |
 |---|---|---|
 | Free | RM 0/month | Up to 3 debts |
-| Pro Monthly | RM 19/month | Unlimited debts + all features |
+| Pro Monthly | RM 19/month | 14-day free trial, then RM 19/month — unlimited debts + all features |
 | Pro Annual | RM 149/year | Same as Pro (35% savings) |
+
+**Trial:** Stripe checkout passes `trial_period_days: 14`. During trial, `subscription.status = 'trialing'` — treated as Pro in the webhook and `isPro()`. No credit card required to start trial.
 
 3-debt limit is enforced at two layers: UI disables the button + Postgres trigger rejects the insert.
 
@@ -55,8 +57,9 @@ Malaysia household debt stands at RM1.65 trillion (84.3% of GDP). There are zero
 - Debt-free date countdown
 - Interest cost comparison (snowball vs avalanche)
 - Free interest calculator widget on landing page (no login required)
+- 3-step onboarding wizard for new users (empty dashboard state)
 
-### Pro only
+### Pro only (14-day free trial)
 - Unlimited debts
 - PDF payoff plan export (browser print-to-PDF, no dependencies)
 - Couple / family mode (invite partner, shared debt view)

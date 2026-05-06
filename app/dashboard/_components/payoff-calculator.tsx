@@ -52,8 +52,17 @@ export function PayoffCalculator({ debts, isPro = false }: Props) {
 
   if (debts.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8 text-center text-muted-foreground">
-        <p className="text-sm">Add your first debt above to see your payoff plan.</p>
+      <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-10 text-center">
+        <div className="w-14 h-14 rounded-full bg-[#FFF8DC] flex items-center justify-center text-2xl mx-auto mb-4">📊</div>
+        <p className="font-bold text-[#1C1C1C] mb-1">No payoff plan yet</p>
+        <p className="text-sm text-muted-foreground mb-5">Add your first debt and we'll calculate your exact debt-free date.</p>
+        <a
+          href="#"
+          onClick={e => { e.preventDefault(); document.querySelector<HTMLButtonElement>('[data-debt-form-trigger]')?.click() }}
+          className="inline-block rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-sm px-5 h-10 leading-10 transition-colors"
+        >
+          + Add your first debt
+        </a>
       </div>
     )
   }
