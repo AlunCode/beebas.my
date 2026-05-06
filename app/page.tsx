@@ -4,10 +4,10 @@ import { InterestCalculator } from './_components/interest-calculator'
 import { PublicAdBanner } from './_components/public-ad-banner'
 
 const STATS = [
+  { value: '200+', label: 'Malaysians tracking debt' },
   { value: 'RM 847', label: 'avg monthly interest saved' },
   { value: '14 mo', label: 'faster debt-free on average' },
   { value: '3 min', label: 'to see your payoff plan' },
-  { value: '100%', label: 'free to start' },
 ]
 
 const FEATURES = [
@@ -188,7 +188,7 @@ export default function LandingPage() {
               </Button>
             </a>
           </div>
-          <p className="text-white/30 text-xs mt-4">No credit card required · Free forever tier available</p>
+          <p className="text-white/30 text-xs mt-4">👥 Join 200+ Malaysians already tracking their debt · No credit card required</p>
         </div>
       </section>
 
@@ -352,17 +352,17 @@ export default function LandingPage() {
       <section className="bg-gray-50 px-6 py-20">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#1C1C1C] tracking-tight mb-4">
-            Start free. Upgrade when you're ready.
+            Start free. Try Pro for 14 days.
           </h2>
           <p className="text-muted-foreground text-lg mb-8 max-w-xl mx-auto">
-            The free tier gives you 3 debts, the snowball & avalanche calculator, and your debt-free date — no credit card needed.
+            Free tier gives you 3 debts and the full calculator. Pro unlocks everything — try it free for 14 days, no credit card needed.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <div className="flex items-center gap-2 text-sm text-[#1C1C1C]">
               <span className="text-emerald-500 font-bold">✓</span> Up to 3 debts free
             </div>
             <div className="flex items-center gap-2 text-sm text-[#1C1C1C]">
-              <span className="text-emerald-500 font-bold">✓</span> Full calculator
+              <span className="text-emerald-500 font-bold">✓</span> 14-day Pro trial
             </div>
             <div className="flex items-center gap-2 text-sm text-[#1C1C1C]">
               <span className="text-emerald-500 font-bold">✓</span> No credit card

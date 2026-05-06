@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       const userId = subscription.metadata.supabase_user_id
       if (!userId) break
 
-      const status = subscription.status === 'active' ? 'pro' : 'free'
+      const status = ['active', 'trialing'].includes(subscription.status) ? 'pro' : 'free'
       await supabase
         .from('users')
         .update({ subscription_status: status })

@@ -44,6 +44,7 @@ export async function POST(request: NextRequest) {
     success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?upgraded=true`,
     cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
     subscription_data: {
+      trial_period_days: 14,
       metadata: { supabase_user_id: user.id },
     },
   })

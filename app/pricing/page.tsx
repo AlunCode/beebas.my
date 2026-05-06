@@ -13,6 +13,10 @@ export const metadata: Metadata = {
 
 const PRICING_FAQS = [
   {
+    q: 'Is there a free trial for Pro?',
+    a: 'Yes — Pro comes with a 14-day free trial. No credit card required to start. If you don\'t upgrade at the end of the trial, you automatically stay on the free plan. No charge, no hassle.',
+  },
+  {
     q: 'What\'s included in the free plan?',
     a: 'Up to 3 debts, snowball and avalanche calculator, payoff timeline chart, debt-free date countdown, and extra payment simulator. No credit card required.',
   },
@@ -50,6 +54,7 @@ const FREE_FEATURES = [
 ]
 
 const PRO_FEATURES = [
+  '14-day free trial — no credit card needed',
   'Unlimited debts',
   'Everything in Free',
   'PDF payoff plan export',
@@ -155,6 +160,7 @@ export default async function PricingPage() {
             price="RM 19"
             period="per month"
             description="For Malaysians serious about getting debt-free."
+            trialText="14-day free trial, then RM 19/month"
             features={PRO_FEATURES}
             featured
             badge="Most popular"
@@ -162,11 +168,11 @@ export default async function PricingPage() {
               isPro ? (
                 <BillingPortalButton />
               ) : user ? (
-                <UpgradeButton priceId={MONTHLY_PRICE_ID} label="Upgrade to Pro" />
+                <UpgradeButton priceId={MONTHLY_PRICE_ID} label="Start 14-day free trial" />
               ) : (
                 <Link href="/signup" className="block">
                   <Button className="w-full h-11 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none">
-                    Start free, then upgrade
+                    Start 14-day free trial
                   </Button>
                 </Link>
               )
@@ -234,7 +240,7 @@ export default async function PricingPage() {
 
 function PlanCard({
   name, price, period, description, features, featured = false,
-  badge, savingsBadge = false, cta,
+  badge, savingsBadge = false, trialText, cta,
 }: {
   name: string
   price: string
@@ -244,6 +250,7 @@ function PlanCard({
   featured?: boolean
   badge?: string
   savingsBadge?: boolean
+  trialText?: string
   cta: React.ReactNode
 }) {
   return (
@@ -271,6 +278,9 @@ function PlanCard({
           <span className={`text-sm ${featured ? 'text-white/50' : 'text-muted-foreground'}`}>/{period}</span>
         </div>
         <p className={`text-sm mt-2 ${featured ? 'text-white/60' : 'text-muted-foreground'}`}>{description}</p>
+        {trialText && (
+          <p className="text-xs font-semibold text-[#FFD000] mt-1.5">{trialText}</p>
+        )}
       </div>
 
       <ul className="space-y-2 flex-1">

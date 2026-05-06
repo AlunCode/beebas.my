@@ -12,6 +12,7 @@ import { ToastProvider } from './_components/toast-provider'
 import { CoupleModeCard } from './_components/couple-mode'
 import { DigestSettings } from './_components/digest-settings'
 import { MilestoneBadges } from './_components/milestone-badges'
+import { OnboardingSteps } from './_components/onboarding-steps'
 
 export default async function DashboardPage({
   searchParams,
@@ -140,14 +141,8 @@ export default async function DashboardPage({
         {/* Debt list */}
         {debtList.length > 0 && <DebtList debts={visibleDebts} totalCount={debtList.length} isPro={pro} />}
 
-        {/* Empty state */}
-        {debtList.length === 0 && (
-          <div className="rounded-2xl border-2 border-dashed border-gray-200 bg-white p-12 text-center">
-            <div className="w-14 h-14 rounded-full bg-[#FFF8DC] flex items-center justify-center text-2xl mx-auto mb-4">🐝</div>
-            <p className="font-bold text-[#1C1C1C] text-lg mb-1">No debts yet</p>
-            <p className="text-sm text-muted-foreground">Hit "Add debt" above and we'll calculate your path to freedom.</p>
-          </div>
-        )}
+        {/* Empty state — onboarding */}
+        {debtList.length === 0 && <OnboardingSteps isPro={pro} />}
 
         {/* Ad — between debt list and payoff plan (free users only) */}
         {!pro && debtList.length > 0 && (
