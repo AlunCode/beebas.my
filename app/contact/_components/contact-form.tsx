@@ -28,7 +28,13 @@ export function ContactForm() {
       <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-8 text-center">
         <div className="w-14 h-14 rounded-full bg-emerald-50 flex items-center justify-center text-2xl mx-auto mb-4">✅</div>
         <p className="font-extrabold text-[#1C1C1C] text-lg mb-1">Message sent!</p>
-        <p className="text-sm text-muted-foreground">We'll get back to you within 24 hours.</p>
+        <p className="text-sm text-muted-foreground mb-5">We'll get back to you within 24 hours.</p>
+        <button
+          onClick={() => setSent(false)}
+          className="text-sm font-semibold text-muted-foreground hover:text-[#1C1C1C] underline underline-offset-2 transition-colors"
+        >
+          Send another message
+        </button>
       </div>
     )
   }
@@ -76,7 +82,15 @@ export function ContactForm() {
           disabled={loading}
           className="w-full h-12 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none"
         >
-          {loading ? 'Sending…' : 'Send message →'}
+          {loading ? (
+            <span className="flex items-center justify-center gap-2">
+              <svg className="animate-spin size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+              Sending…
+            </span>
+          ) : 'Send message →'}
         </Button>
       </form>
     </div>

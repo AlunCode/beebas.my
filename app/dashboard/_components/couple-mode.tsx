@@ -19,6 +19,7 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
   const [currentPartnerEmail, setCurrentPartnerEmail] = useState(partnerEmail)
   const [pending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [confirmLeave, setConfirmLeave] = useState(false)
   const { toast } = useToast()
 
   const inviteUrl = code
@@ -95,13 +96,31 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
           <p className="text-xs text-muted-foreground">
             You can see each other's debts and manage them together.
           </p>
-          <button
-            onClick={handleLeave}
-            disabled={pending}
-            className="text-xs text-red-500 hover:text-red-700 font-semibold disabled:opacity-50 transition-colors"
-          >
-            {pending ? 'Leaving…' : 'Leave couple mode'}
-          </button>
+          {confirmLeave ? (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-muted-foreground">Leave couple mode?</span>
+              <button
+                onClick={() => setConfirmLeave(false)}
+                className="text-xs text-muted-foreground hover:text-[#1C1C1C] font-medium underline underline-offset-2 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleLeave}
+                disabled={pending}
+                className="text-xs text-red-500 hover:text-red-700 font-semibold disabled:opacity-50 transition-colors"
+              >
+                {pending ? 'Leaving…' : 'Yes, leave'}
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setConfirmLeave(true)}
+              className="text-xs text-red-500 hover:text-red-700 font-semibold transition-colors"
+            >
+              Leave couple mode
+            </button>
+          )}
         </div>
       ) : inviteUrl ? (
         <div className="space-y-3">

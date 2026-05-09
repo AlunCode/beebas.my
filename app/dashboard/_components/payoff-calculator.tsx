@@ -42,6 +42,11 @@ export function PayoffCalculator({ debts, isPro = false }: Props) {
   const [extraPayment, setExtraPayment] = useState(0)
   const [strategy, setStrategy] = useState<Strategy>('snowball')
 
+  const baseline = useMemo(() => {
+    if (debts.length === 0) return null
+    return calculateBoth({ debts: debts.map(toCalcDebt), extraPayment: 0 })
+  }, [debts])
+
   const results = useMemo(() => {
     if (debts.length === 0) return null
     return calculateBoth({
@@ -162,11 +167,15 @@ export function PayoffCalculator({ debts, isPro = false }: Props) {
           <span>RM 0</span>
           <span>RM 2,000</span>
         </div>
-        {extraPayment > 0 && (
-          <p className="text-xs text-emerald-600 font-medium mt-2">
-            ✓ Paying {fmtExact(extraPayment)} extra saves {fmtExact(active.interestSavedVsMinimum)} in interest and clears debt {active.debtFreeMonths > 0 ? `${Math.abs(active.debtFreeMonths - calculateBoth({ debts: debts.map(toCalcDebt), extraPayment: 0 }).snowball.debtFreeMonths)} months` : ''} sooner.
-          </p>
-        )}
+        {extraPayment > 0 && baseline && (() => {
+          const monthsSaved = baseline[strategy].debtFreeMonths - active.debtFreeMonths
+          const interestSaved = baseline[strategy].totalInterestPaid - active.totalInterestPaid
+          return (
+            <p className="text-xs text-emerald-600 font-medium mt-2">
+              ✓ {monthsSaved > 0 ? `Debt-free ${monthsSaved} month${monthsSaved > 1 ? 's' : ''} sooner` : 'On track'}{interestSaved > 0 ? ` · saves ${fmtExact(interestSaved)} in interest` : ''}.
+            </p>
+          )
+        })()}
       </div>
 
       {/* Payoff order */}

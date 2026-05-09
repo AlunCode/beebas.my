@@ -36,17 +36,22 @@ export function OnboardingSteps({ isPro }: Props) {
         {STEPS.map((step, i) => {
           const isActive = i === 0
           return (
-            <div key={step.number} className={`px-6 py-5 flex items-start gap-4 ${!isActive ? 'opacity-40' : ''}`}>
+            <div key={step.number} className="px-6 py-5 flex items-start gap-4">
               <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-extrabold shrink-0 mt-0.5 ${
-                isActive ? 'bg-[#FFD000] text-[#1C1C1C]' : 'bg-gray-100 text-gray-400'
+                isActive ? 'bg-[#FFD000] text-[#1C1C1C]' : 'bg-gray-100 text-gray-300'
               }`}>
                 {step.number}
               </div>
               <div className="flex-1">
-                <p className={`font-bold text-sm mb-1 ${isActive ? 'text-[#1C1C1C]' : 'text-gray-400'}`}>
-                  {step.title}
-                </p>
-                <p className="text-xs text-muted-foreground leading-relaxed">{step.desc}</p>
+                <div className="flex items-center gap-2 mb-1">
+                  <p className={`font-bold text-sm ${isActive ? 'text-[#1C1C1C]' : 'text-gray-400'}`}>
+                    {step.title}
+                  </p>
+                  {!isActive && (
+                    <span className="text-[10px] font-semibold text-gray-300 uppercase tracking-widest">After step {i}</span>
+                  )}
+                </div>
+                <p className={`text-xs leading-relaxed ${isActive ? 'text-muted-foreground' : 'text-gray-300'}`}>{step.desc}</p>
                 {isActive && (
                   <div className="mt-4">
                     <DebtForm debtCount={0} isPro={isPro} />

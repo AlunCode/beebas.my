@@ -41,12 +41,16 @@ interface Props {
   isPro: boolean
 }
 
+type ConfirmAction = { id: string; name: string; action: 'delete' | 'paid' }
+
 export function DebtList({ debts, totalCount, isPro }: Props) {
   const [deleting, setDeleting] = useState<string | null>(null)
   const [paying, setPaying] = useState<string | null>(null)
+  const [confirm, setConfirm] = useState<ConfirmAction | null>(null)
   const { toast } = useToast()
 
   async function handleDelete(id: string, name: string) {
+    setConfirm(null)
     setDeleting(id)
     const result = await deleteDebt(id)
     setDeleting(null)
@@ -58,6 +62,7 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
   }
 
   async function handleMarkPaid(id: string, name: string) {
+    setConfirm(null)
     setPaying(id)
     const result = await markDebtPaid(id)
     setPaying(null)
@@ -66,7 +71,6 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
       return
     }
     toast(`"${name}" paid off! 🎉`)
-    // Fire a toast for each milestone earned (staggered slightly)
     result.milestones?.forEach((type, i) => {
       setTimeout(() => toast(MILESTONE_TOASTS[type]), (i + 1) * 700)
     })
@@ -76,58 +80,119 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
 
   return (
     <div className="space-y-3">
-      {debts.map(debt => (
-        <div
-          key={debt.id}
-          className="bg-white rounded-2xl border border-gray-100 px-5 py-4 flex items-center justify-between gap-4 shadow-sm"
-        >
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <span className="font-bold text-[#1C1C1C] truncate">{debt.name}</span>
-              <Badge
-                variant="secondary"
-                className="text-xs shrink-0 bg-[#FFF8DC] text-[#8B6000] border-[#FFD000]/30 rounded-full"
-              >
-                {debt.custom_category ?? TYPE_LABELS[debt.debt_type] ?? 'Other'}
-              </Badge>
-            </div>
-            <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-muted-foreground">
-              <span className="font-semibold text-[#1C1C1C]">{fmt(debt.balance)}</span>
-              <span>{debt.interest_rate}% p.a.</span>
-              <span>Min. {fmt(debt.minimum_payment)}/mo</span>
-            </div>
-          </div>
+      {debts.map(debt => {
+        const isConfirming = confirm?.id === debt.id
+        const isDeleting = deleting === debt.id
+        const isPaying = paying === debt.id
+        const isBusy = isDeleting || isPaying
 
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              onClick={() => handleMarkPaid(debt.id, debt.name)}
-              disabled={paying === debt.id || deleting === debt.id}
-              className="text-emerald-600 hover:text-emerald-700 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-xs font-bold disabled:opacity-40 flex items-center gap-1"
-              aria-label="Mark as paid off"
-            >
-              {paying === debt.id ? '…' : '✓ Paid off'}
-            </button>
-            <EditDebtDialog debt={debt} isPro={isPro} />
-            <button
-              onClick={() => handleDelete(debt.id, debt.name)}
-              disabled={deleting === debt.id || paying === debt.id}
-              className="text-muted-foreground hover:text-red-500 transition-colors p-1.5 rounded-lg hover:bg-red-50 disabled:opacity-40"
-              aria-label="Delete debt"
-            >
-              {deleting === debt.id ? (
-                <span className="text-xs">…</span>
-              ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="3 6 5 6 21 6" />
-                  <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
-                  <path d="M10 11v6M14 11v6" />
-                  <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
-                </svg>
-              )}
-            </button>
+        return (
+          <div
+            key={debt.id}
+            className="bg-white rounded-2xl border border-gray-100 px-5 py-4 shadow-sm"
+          >
+            {isConfirming ? (
+              /* ── Inline confirmation row ── */
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-sm font-semibold text-[#1C1C1C]">
+                  {confirm.action === 'delete'
+                    ? `Delete "${confirm.name}"?`
+                    : `Mark "${confirm.name}" as fully paid off?`}
+                </p>
+                <div className="flex items-center gap-2 shrink-0">
+                  <button
+                    onClick={() => setConfirm(null)}
+                    className="text-sm text-muted-foreground hover:text-[#1C1C1C] font-medium px-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <Button
+                    onClick={() =>
+                      confirm.action === 'delete'
+                        ? handleDelete(confirm.id, confirm.name)
+                        : handleMarkPaid(confirm.id, confirm.name)
+                    }
+                    className={`rounded-xl font-bold border-0 shadow-none text-sm h-8 px-4 ${
+                      confirm.action === 'delete'
+                        ? 'bg-red-500 hover:bg-red-600 text-white'
+                        : 'bg-emerald-500 hover:bg-emerald-600 text-white'
+                    }`}
+                  >
+                    {confirm.action === 'delete' ? 'Yes, delete' : 'Yes, mark paid'}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* ── Normal row ── */
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-bold text-[#1C1C1C] truncate">{debt.name}</span>
+                    <Badge
+                      variant="secondary"
+                      className="text-xs shrink-0 bg-[#FFF8DC] text-[#8B6000] border-[#FFD000]/30 rounded-full"
+                    >
+                      {debt.custom_category ?? TYPE_LABELS[debt.debt_type] ?? 'Other'}
+                    </Badge>
+                  </div>
+                  <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-muted-foreground">
+                    <span className="font-semibold text-[#1C1C1C]">{fmt(debt.balance)}</span>
+                    <span>{debt.interest_rate}% p.a.</span>
+                    <span>Min. {fmt(debt.minimum_payment)}/mo</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1 shrink-0">
+                  {/* Mark paid */}
+                  <button
+                    onClick={() => setConfirm({ id: debt.id, name: debt.name, action: 'paid' })}
+                    disabled={isBusy}
+                    className="text-emerald-600 hover:text-emerald-700 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-xs font-bold disabled:opacity-40 flex items-center gap-1.5"
+                    aria-label="Mark as paid off"
+                  >
+                    {isPaying ? (
+                      <svg className="animate-spin size-3.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                    )}
+                    Paid off
+                  </button>
+
+                  {/* Edit */}
+                  <EditDebtDialog debt={debt} isPro={isPro} />
+
+                  {/* Delete */}
+                  <button
+                    onClick={() => setConfirm({ id: debt.id, name: debt.name, action: 'delete' })}
+                    disabled={isBusy}
+                    className="text-muted-foreground hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 disabled:opacity-40"
+                    aria-label="Delete debt"
+                  >
+                    {isDeleting ? (
+                      <svg className="animate-spin size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6" />
+                        <path d="M10 11v6M14 11v6" />
+                        <path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      ))}
+        )
+      })}
 
       {!isPro && totalCount <= 3 && (
         <p className="text-xs text-center text-muted-foreground pt-1">

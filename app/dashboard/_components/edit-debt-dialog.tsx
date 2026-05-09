@@ -107,6 +107,7 @@ export function EditDebtDialog({ debt, isPro }: Props) {
             <div className="space-y-1.5">
               <Label className="text-sm font-semibold">Interest rate (%)</Label>
               <Input name="interest_rate" type="number" min="0" max="100" step="0.01" defaultValue={debt.interest_rate} required className="rounded-xl h-10" />
+              <p className="text-xs text-muted-foreground">e.g. credit card ~18%, car loan ~3–5%, PTPTN 1%</p>
             </div>
           </div>
 
@@ -137,7 +138,15 @@ export function EditDebtDialog({ debt, isPro }: Props) {
             disabled={loading}
             className="w-full h-10 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none"
           >
-            {loading ? 'Saving…' : 'Save changes'}
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin size-4 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Saving…
+              </span>
+            ) : 'Save changes'}
           </Button>
         </form>
       </DialogContent>
