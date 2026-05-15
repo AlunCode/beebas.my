@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { signup } from '@/lib/auth/actions'
 import { SubmitButton } from '../_components/submit-button'
+import { SocialButtons } from '../_components/social-buttons'
 
 export default async function SignupPage({
   searchParams,
@@ -57,6 +58,14 @@ export default async function SignupPage({
               {params.error}
             </div>
           )}
+
+          <SocialButtons />
+
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-gray-200" />
+            <span className="text-xs text-muted-foreground font-medium">or continue with email</span>
+            <div className="flex-1 h-px bg-gray-200" />
+          </div>
 
           <form action={signup} className="space-y-5">
             <div className="space-y-1.5">
