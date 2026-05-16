@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { getAuthUser, isPro } from '@/lib/auth/get-user'
 import { createClient } from '@/lib/supabase/server'
-import { logout } from '@/lib/auth/actions'
 import { Button } from '@/components/ui/button'
+import { LogoutButton } from './_components/logout-button'
 import { DebtForm } from './_components/debt-form'
 import { DebtList } from './_components/debt-list'
 import { PayoffCalculator } from './_components/payoff-calculator'
@@ -69,12 +69,7 @@ export default async function DashboardPage({
             </Link>
           )}
           {pro && <BillingPortalButton />}
-          <form action={logout}>
-            <Button type="submit" variant="outline" size="sm"
-              className="rounded-lg border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent text-xs">
-              Log out
-            </Button>
-          </form>
+          <LogoutButton />
         </div>
       </nav>
 
