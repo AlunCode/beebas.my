@@ -1,0 +1,16 @@
+name: Supabase Keep Alive
+
+on:
+  schedule:
+    - cron: "0 0 */2 * *"  # setiap 2 hari
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Curl Supabase
+        run: |
+          curl -X GET "https://qwhcqfwsjzsamrtyudlq.supabase.co/rest/v1/users?select=id" \
+          -H "apikey: sb_publishable_i4A18tN_oi0-fjVmonyrcA_5XL381le" \
+          -H "Authorization: Bearer sb_publishable_i4A18tN_oi0-fjVmonyrcA_5XL381le"
