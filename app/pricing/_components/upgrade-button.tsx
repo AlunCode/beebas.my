@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 
 interface Props {
   priceId: string
+  mode?: string
   label?: string
   className?: string
   variant?: 'primary' | 'outline'
@@ -15,22 +16,29 @@ export function UpgradeButton({
   label = 'Upgrade to Pro',
   className = '',
   variant = 'primary',
+  mode = 'subscription'
 }: Props) {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleClick() {
     setLoading(true)
+    setError(null)
     try {
       const res = await fetch('/api/stripe/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ priceId, mode }),
       })
-      const { url, error } = await res.json()
-      if (error) throw new Error(error)
-      window.location.href = url
+      const data = await res.json()
+      if (!res.ok) {
+        throw new Error(data.error || `Request failed (${res.status})`)
+      }
+      if (data.error) throw new Error(data.error)
+      window.location.href = data.url
     } catch (err) {
-      console.error(err)
+      console.error('[checkout] Client error:', err)
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.')
       setLoading(false)
     }
   }
@@ -42,8 +50,13 @@ export function UpgradeButton({
       : `${base} bg-white hover:bg-gray-50 text-[#1C1C1C] border border-gray-200`
 
   return (
-    <Button onClick={handleClick} disabled={loading} className={`${styles} ${className}`}>
-      {loading ? 'Redirecting…' : label}
-    </Button>
+    <div className="w-full">
+      {error && (
+        <p className="text-sm text-red-600 mb-2 text-center">{error}</p>
+      )}
+      <Button onClick={handleClick} disabled={loading} className={`${styles} ${className}`}>
+        {loading ? 'Redirecting…' : label}
+      </Button>
+    </div>
   )
 }

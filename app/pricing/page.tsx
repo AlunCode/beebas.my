@@ -218,7 +218,7 @@ export default async function PricingPage() {
               isPro ? (
                 <BillingPortalButton />
               ) : user ? (
-                <UpgradeButton priceId={LIFETIME_PRICE_ID} label="Get lifetime access" variant="outline" /> 
+                <UpgradeButton priceId={LIFETIME_PRICE_ID} mode="payment" label="Get lifetime access" variant="outline" /> 
               ) : (
                 <Link href="/signup" className="block">
                   <Button variant="outline" className="w-full h-11 rounded-xl font-bold shadow-none">
