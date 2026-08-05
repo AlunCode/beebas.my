@@ -14,14 +14,14 @@ import { addDebt } from '@/app/actions/debts'
 import { useToast } from './toast-provider'
 
 const DEBT_TYPES = [
-  { value: 'credit_card',    label: 'Credit Card' },
-  { value: 'personal_loan',  label: 'Personal Loan' },
-  { value: 'ptptn',          label: 'PTPTN' },
-  { value: 'car_loan',       label: 'Car Loan' },
-  { value: 'home_loan',      label: 'Home Loan' },
-  { value: 'bnpl',           label: 'BNPL' },
-  { value: 'aeon_credit',    label: 'AEON Credit' },
-  { value: 'other',          label: 'Other' },
+  { value: 'credit_card', label: 'Credit Card' },
+  { value: 'personal_loan', label: 'Personal Loan' },
+  { value: 'ptptn', label: 'PTPTN' },
+  { value: 'car_loan', label: 'Car Loan' },
+  { value: 'home_loan', label: 'Home Loan' },
+  { value: 'bnpl', label: 'BNPL' },
+  { value: 'aeon_credit', label: 'AEON Credit' },
+  { value: 'other', label: 'Other' },
 ]
 
 interface Props {
@@ -89,19 +89,20 @@ export function DebtForm({ debtCount, isPro }: Props) {
             <Input name="name" placeholder="e.g. Maybank Credit Card" required className="rounded-xl h-10" />
           </div>
 
-          <div className="space-y-1.5">
-            <Label className="text-sm font-semibold">Debt type</Label>
-            <Select value={debtType} onValueChange={(v) => { if (v !== null) setDebtType(v) }}>
-              <SelectTrigger className="rounded-xl h-10">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {DEBT_TYPES.map(t => (
-                  <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <Select value={debtType} onValueChange={(v) => { if (v !== null) setDebtType(v) }}>
+            <SelectTrigger className="w-full rounded-xl h-10 py-4">
+              <SelectValue>
+                {DEBT_TYPES.find((t) => t.value === debtType)?.label}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {DEBT_TYPES.map((t) => (
+                <SelectItem key={t.value} value={t.value}>
+                  {t.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
