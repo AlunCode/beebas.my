@@ -44,10 +44,26 @@ interface Props {
 type ConfirmAction = { id: string; name: string; action: 'delete' | 'paid' }
 
 export function DebtList({ debts, totalCount, isPro }: Props) {
+  const [localDebts, setLocalDebts] = useState(debts)
+  const [localTotalCount, setLocalTotalCount] = useState(totalCount)
   const [deleting, setDeleting] = useState<string | null>(null)
   const [paying, setPaying] = useState<string | null>(null)
   const [confirm, setConfirm] = useState<ConfirmAction | null>(null)
   const { toast } = useToast()
+
+  // Sync local state when server data changes (e.g., after revalidation).
+  // Using render-time state adjustment per React docs:
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevDebts, setPrevDebts] = useState(debts)
+  const [prevTotalCount, setPrevTotalCount] = useState(totalCount)
+  if (debts !== prevDebts) {
+    setPrevDebts(debts)
+    setLocalDebts(debts)
+  }
+  if (totalCount !== prevTotalCount) {
+    setPrevTotalCount(totalCount)
+    setLocalTotalCount(totalCount)
+  }
 
   async function handleDelete(id: string, name: string) {
     setConfirm(null)
@@ -57,6 +73,9 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
     if (result?.error) {
       toast(result.error, 'error')
     } else {
+      // Optimistic UI: remove debt immediately so it disappears when the toast shows
+      setLocalDebts(prev => prev.filter(d => d.id !== id))
+      setLocalTotalCount(prev => Math.max(0, prev - 1))
       toast(`"${name}" removed`)
     }
   }
@@ -70,17 +89,20 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
       toast(result.error, 'error')
       return
     }
+    // Optimistic UI: remove debt immediately so it disappears when the toast shows
+    setLocalDebts(prev => prev.filter(d => d.id !== id))
+    setLocalTotalCount(prev => Math.max(0, prev - 1))
     toast(`"${name}" paid off! 🎉`)
     result.milestones?.forEach((type, i) => {
       setTimeout(() => toast(MILESTONE_TOASTS[type]), (i + 1) * 700)
     })
   }
 
-  if (debts.length === 0) return null
+  if (localDebts.length === 0) return null
 
   return (
     <div className="space-y-3">
-      {debts.map(debt => {
+      {localDebts.map(debt => {
         const isConfirming = confirm?.id === debt.id
         const isDeleting = deleting === debt.id
         const isPaying = paying === debt.id
@@ -194,23 +216,23 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
         )
       })}
 
-      {!isPro && totalCount <= 3 && (
+      {!isPro && localTotalCount <= 3 && (
         <p className="text-xs text-center text-muted-foreground pt-1">
-          {debts.length}/3 debts used on free plan.{' '}
-          {debts.length >= 3 && <span className="font-semibold text-[#1C1C1C]">Upgrade for unlimited.</span>}
+          {localDebts.length}/3 debts used on free plan.{' '}
+          {localDebts.length >= 3 && <span className="font-semibold text-[#1C1C1C]">Upgrade for unlimited.</span>}
         </p>
       )}
 
-      {!isPro && totalCount > 3 && (
+      {!isPro && localTotalCount > 3 && (
         <div className="rounded-2xl border-2 border-dashed border-[#FFD000]/40 bg-[#FFF8DC]/50 px-5 py-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="text-xl">🔒</span>
             <div>
               <p className="font-bold text-[#1C1C1C] text-sm">
-                {totalCount - debts.length} more debt{totalCount - debts.length > 1 ? 's' : ''} hidden
+                {localTotalCount - localDebts.length} more debt{localTotalCount - localDebts.length > 1 ? 's' : ''} hidden
               </p>
               <p className="text-xs text-[#8B6000] mt-0.5">
-                Your data is safe — re-subscribe to Pro to see all {totalCount} debts.
+                Your data is safe — re-subscribe to Pro to see all {localTotalCount} debts.
               </p>
             </div>
           </div>
