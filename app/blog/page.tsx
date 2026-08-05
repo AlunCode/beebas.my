@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
+import { Fragment } from 'react'
 
 export const metadata: Metadata = {
   title: 'Blog — Debt Tips for Malaysians',
@@ -78,7 +79,7 @@ export default function BlogPage() {
 
         <div className="space-y-4">
           {POSTS.map((post, i) => (
-            <>
+            <Fragment key={post.slug}>
               <Link
                 key={post.slug}
                 href={`/blog/${post.slug}`}
@@ -98,8 +99,8 @@ export default function BlogPage() {
                   Read article →
                 </p>
               </Link>
-              {i === 0 && <PublicAdBanner key="ad" />}
-            </>
+              {i === 0 && <PublicAdBanner />} 
+            </Fragment>
           ))}
         </div>
       </main>

@@ -44,6 +44,7 @@ const PRICING_FAQS = [
 
 const MONTHLY_PRICE_ID = process.env.STRIPE_PRO_MONTHLY_PRICE_ID!
 const ANNUAL_PRICE_ID = process.env.STRIPE_PRO_ANNUAL_PRICE_ID!
+const LIFETIME_PRICE_ID = process.env.STRIPE_PRO_LIFETIME_PRICE_ID!
 
 const FREE_FEATURES = [
   'Up to 3 debts',
@@ -147,10 +148,10 @@ export default async function PricingPage() {
                   ? <Button disabled className="w-full h-11 rounded-xl bg-gray-100 text-gray-400 font-bold border-0 shadow-none">Your previous plan</Button>
                   : <Button disabled className="w-full h-11 rounded-xl bg-gray-100 text-gray-500 font-bold border-0 shadow-none">Current plan</Button>
                 : <Link href="/signup" className="block">
-                    <Button className="w-full h-11 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none">
-                      Get started free
-                    </Button>
-                  </Link>
+                  <Button className="w-full h-11 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none">
+                    Get started free
+                  </Button>
+                </Link>
             }
           />
 
@@ -181,6 +182,7 @@ export default async function PricingPage() {
 
           {/* Annual */}
           <PlanCard
+            isHidden
             name="Pro Annual"
             price="RM 149"
             period="per year"
@@ -193,6 +195,30 @@ export default async function PricingPage() {
                 <BillingPortalButton />
               ) : user ? (
                 <UpgradeButton priceId={ANNUAL_PRICE_ID} label="Get annual plan" variant="outline" />
+              ) : (
+                <Link href="/signup" className="block">
+                  <Button variant="outline" className="w-full h-11 rounded-xl font-bold shadow-none">
+                    Start free, then upgrade
+                  </Button>
+                </Link>
+              )
+            }
+          />
+
+          {/* Lifetime */}
+          <PlanCard
+            name="Pro Lifetime"
+            price="RM 80"
+            period="one-time"
+            description="Pay once, own it forever. No renewals, no surprises — just permanent Pro access."
+            features={PRO_FEATURES}
+            badge="Best deal"       
+            savingsBadge            
+            cta={
+              isPro ? (
+                <BillingPortalButton />
+              ) : user ? (
+                <UpgradeButton priceId={LIFETIME_PRICE_ID} label="Get lifetime access" variant="outline" /> 
               ) : (
                 <Link href="/signup" className="block">
                   <Button variant="outline" className="w-full h-11 rounded-xl font-bold shadow-none">
@@ -240,7 +266,7 @@ export default async function PricingPage() {
 
 function PlanCard({
   name, price, period, description, features, featured = false,
-  badge, savingsBadge = false, trialText, cta,
+  badge, savingsBadge = false, trialText, cta, isHidden = false,
 }: {
   name: string
   price: string
@@ -252,19 +278,19 @@ function PlanCard({
   savingsBadge?: boolean
   trialText?: string
   cta: React.ReactNode
+  isHidden?: boolean
 }) {
+  if (isHidden) return null
   return (
-    <div className={`relative rounded-2xl p-6 flex flex-col gap-6 ${
-      featured
-        ? 'bg-[#1C1C1C] text-white shadow-xl ring-2 ring-[#FFD000]'
-        : 'bg-white border border-gray-100 shadow-sm'
-    }`}>
+    <div className={`relative rounded-2xl p-6 flex flex-col gap-6 ${featured
+      ? 'bg-[#1C1C1C] text-white shadow-xl ring-2 ring-[#FFD000]'
+      : 'bg-white border border-gray-100 shadow-sm'
+      }`}>
       {badge && (
-        <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 rounded-full ${
-          savingsBadge
-            ? 'bg-emerald-500 text-white'
-            : 'bg-[#FFD000] text-[#1C1C1C]'
-        }`}>
+        <div className={`absolute -top-3 left-1/2 -translate-x-1/2 text-xs font-bold px-3 py-1 rounded-full ${savingsBadge
+          ? 'bg-emerald-500 text-white'
+          : 'bg-[#FFD000] text-[#1C1C1C]'
+          }`}>
           {badge}
         </div>
       )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 interface PublicAdBannerProps {
   /** Which ad slot env var to use. Defaults to NEXT_PUBLIC_ADSENSE_SLOT_PUBLIC. */
@@ -26,18 +26,23 @@ let placeholderIndex = 0
 export function PublicAdBanner({ slot = 'public', className = '' }: PublicAdBannerProps) {
   const adSlot = SLOTS[slot]
   const showReal = Boolean(PUBLISHER_ID && adSlot)
+  const [placeholder, setPlaceholder] = useState(PLACEHOLDERS[0])
+
+  useEffect(() => {
+    if (!showReal) {
+      // 👇 Rotate only after hydration is complete — safe, client-only
+      setPlaceholder(PLACEHOLDERS[placeholderIndex++ % PLACEHOLDERS.length])
+    }
+  }, [showReal])
 
   useEffect(() => {
     if (!showReal) return
     try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+      ; ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
     } catch {
       // safe to ignore
     }
   }, [showReal])
-
-  const placeholder = PLACEHOLDERS[placeholderIndex++ % PLACEHOLDERS.length]
 
   return (
     <div className={`relative rounded-2xl border border-gray-100 bg-white overflow-hidden shadow-sm ${className}`}>
