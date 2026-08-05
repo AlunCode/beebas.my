@@ -12,8 +12,8 @@ jobs:
       - name: Curl Supabase
         run: |
           curl -X GET "https://qwhcqfwsjzsamrtyudlq.supabase.co/rest/v1/users?select=id" \
-          -H "apikey:  ${{ secrets.SUPABASE_API_KEY }}" \
-          -H "Authorization: Bearer  ${{ secrets.SUPABASE_API_KEY }}"
-          -H "Accept: application/json" \
+            -H "apikey: ${{ secrets.SUPABASE_API_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_API_KEY }}" \
+            -H "Accept: application/json" \
             --max-time 10 \
             --fail
