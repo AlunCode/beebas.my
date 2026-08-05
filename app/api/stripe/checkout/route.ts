@@ -6,7 +6,6 @@ import Stripe from 'stripe'
 export async function POST(request: NextRequest) {
   try {
     // --- Validate environment variables ---
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL
     if (!process.env.STRIPE_SECRET_KEY) {
       console.error('[checkout] STRIPE_SECRET_KEY is not set')
       return NextResponse.json(
@@ -14,13 +13,12 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       )
     }
-    if (!appUrl) {
-      console.error('[checkout] NEXT_PUBLIC_APP_URL is not set')
-      return NextResponse.json(
-        { error: 'Server misconfiguration: missing app URL.' },
-        { status: 500 }
-      )
-    }
+
+    // Derive base URL from request headers so success/cancel URLs always
+    // point back to the actual host (works for localhost, staging, and production).
+    const host = request.headers.get('host') || process.env.NEXT_PUBLIC_APP_URL?.replace(/^https?:\/\//, '') || 'localhost:3000'
+    const protocol = request.headers.get('x-forwarded-proto') || (host.includes('localhost') ? 'http' : 'https')
+    const appUrl = `${protocol}://${host}`
 
     // --- Auth ---
     const supabase = await createClient()

@@ -13,6 +13,7 @@ import { CoupleModeCard } from './_components/couple-mode'
 import { DigestSettings } from './_components/digest-settings'
 import { MilestoneBadges } from './_components/milestone-badges'
 import { OnboardingSteps } from './_components/onboarding-steps'
+import { SyncSubscription } from './_components/sync-subscription'
 
 export default async function DashboardPage({
   searchParams,
@@ -73,6 +74,7 @@ export default async function DashboardPage({
         </div>
       </nav>
 
+      <SyncSubscription />
       <ToastProvider>
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Upgrade success banner */}

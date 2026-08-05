@@ -12,11 +12,41 @@ function getAdminClient() {
   )
 }
 
+/**
+ * Look up the Supabase user ID for a Stripe customer.
+ * Tries subscription metadata first, then falls back to
+ * querying the `users` table by `stripe_customer_id`.
+ */
+async function resolveUserId(
+  sub: Stripe.Subscription,
+  supabase: ReturnType<typeof getAdminClient>
+): Promise<string | null> {
+  // 1. Try subscription metadata
+  if (sub.metadata.supabase_user_id) {
+    return sub.metadata.supabase_user_id
+  }
+
+  // 2. Fall back: look up by customer ID
+  const customerId =
+    typeof sub.customer === 'string' ? sub.customer : sub.customer?.id
+
+  if (!customerId) return null
+
+  const { data } = await supabase
+    .from('users')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single<{ id: string }>()
+
+  return data?.id ?? null
+}
+
 export async function POST(request: NextRequest) {
   const body = await request.text()
   const signature = request.headers.get('stripe-signature')
 
   if (!signature) {
+    console.warn('[webhook] Missing stripe-signature header')
     return NextResponse.json({ error: 'Missing stripe-signature' }, { status: 400 })
   }
 
@@ -24,9 +54,12 @@ export async function POST(request: NextRequest) {
 
   try {
     event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
-  } catch {
+  } catch (err) {
+    console.error('[webhook] Signature verification failed:', err)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
+
+  console.log(`[webhook] Received event: ${event.type} (${event.id})`)
 
   const supabase = getAdminClient()
 
@@ -34,10 +67,16 @@ export async function POST(request: NextRequest) {
     case 'customer.subscription.created':
     case 'customer.subscription.updated': {
       const subscription = event.data.object as Stripe.Subscription
-      const userId = subscription.metadata.supabase_user_id
-      if (!userId) break
+      const userId = await resolveUserId(subscription, supabase)
+
+      if (!userId) {
+        console.warn(`[webhook] No user found for subscription ${subscription.id} (customer: ${subscription.customer})`)
+        break
+      }
 
       const status = ['active', 'trialing'].includes(subscription.status) ? 'pro' : 'free'
+      console.log(`[webhook] User ${userId} → subscription_status: ${status} (Stripe status: ${subscription.status})`)
+
       await supabase
         .from('users')
         .update({ subscription_status: status })
@@ -47,15 +86,24 @@ export async function POST(request: NextRequest) {
 
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription
-      const userId = subscription.metadata.supabase_user_id
-      if (!userId) break
+      const userId = await resolveUserId(subscription, supabase)
 
+      if (!userId) {
+        console.warn(`[webhook] No user found for deleted subscription ${subscription.id}`)
+        break
+      }
+
+      console.log(`[webhook] User ${userId} → subscription_status: cancelled`)
       await supabase
         .from('users')
         .update({ subscription_status: 'cancelled' })
         .eq('id', userId)
       break
     }
+
+    default:
+      // Unhandled event type — just acknowledge
+      break
   }
 
   return NextResponse.json({ received: true })
