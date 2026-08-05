@@ -143,7 +143,7 @@ export function PayoffCalculator({ debts, isPro = false }: Props) {
           positive={active.interestSavedVsMinimum > 0}
         />
         <StatCard
-          label="vs Avalanche"
+          label={strategy === 'snowball' ? 'vs Avalanche' : 'vs Snowball'}
           value={monthsDiff === 0 ? 'Same!' : `${Math.abs(monthsDiff)} mo ${monthsDiff > 0 ? 'faster' : 'slower'}`}
           sub={interestDiff === 0 ? '—' : `${interestDiff > 0 ? 'save' : 'cost'} ${fmt(Math.abs(interestDiff))} more`}
         />
