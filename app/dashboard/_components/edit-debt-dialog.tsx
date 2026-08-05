@@ -40,9 +40,11 @@ export function EditDebtDialog({ debt, isPro }: Props) {
   const [customCategory, setCustomCategory] = useState(debt.custom_category ?? '')
   const { toast } = useToast()
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setLoading(true)
     setError(null)
+    const formData = new FormData(e.currentTarget)
     formData.set('debt_type', debtType)
     const result = await updateDebt(debt.id, formData)
     setLoading(false)
@@ -73,7 +75,7 @@ export function EditDebtDialog({ debt, isPro }: Props) {
           <DialogTitle className="text-xl font-extrabold tracking-tight">Edit debt</DialogTitle>
         </DialogHeader>
 
-        <form action={handleSubmit} className="space-y-4 mt-2">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           {error && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-700">
               {error}

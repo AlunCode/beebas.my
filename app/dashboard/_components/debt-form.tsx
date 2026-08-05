@@ -40,9 +40,11 @@ export function DebtForm({ debtCount, isPro }: Props) {
 
   const atLimit = !isPro && debtCount >= 3
 
-  async function handleSubmit(formData: FormData) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
     setLoading(true)
     setError(null)
+    const formData = new FormData(e.currentTarget)
     formData.set('debt_type', debtType)
     const result = await addDebt(formData)
     setLoading(false)
@@ -77,7 +79,7 @@ export function DebtForm({ debtCount, isPro }: Props) {
           <DialogTitle className="text-xl font-extrabold tracking-tight">Add a debt</DialogTitle>
         </DialogHeader>
 
-        <form ref={formRef} action={handleSubmit} className="space-y-4 mt-2">
+        <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 mt-2">
           {error && (
             <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-sm text-red-700">
               {error}
