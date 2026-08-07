@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
       mode,
       payment_method_types: ['card'],
       line_items: [{ price: priceId, quantity: 1 }],
-      success_url: `${appUrl}/dashboard?upgraded=true`,
+      success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/pricing`,
       metadata: { supabase_user_id: user.id },
     }

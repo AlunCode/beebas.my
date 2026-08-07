@@ -13,18 +13,18 @@ import { CoupleModeCard } from './_components/couple-mode'
 import { DigestSettings } from './_components/digest-settings'
 import { MilestoneBadges } from './_components/milestone-badges'
 import { OnboardingSteps } from './_components/onboarding-steps'
-import { SyncSubscription } from './_components/sync-subscription'
 
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ upgraded?: string; coupled?: string }>
+  searchParams: Promise<{ upgraded?: string; coupled?: string; subscription?: string }>
 }) {
   const user = await getAuthUser()
   const pro = isPro(user)
   const params = await searchParams
   const justUpgraded = params.upgraded === 'true'
   const justCoupled = params.coupled === 'true'
+  const justCancelled = params.subscription === 'cancelled'
 
   const supabase = await createClient()
 
@@ -74,7 +74,6 @@ export default async function DashboardPage({
         </div>
       </nav>
 
-      <SyncSubscription />
       <ToastProvider>
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
         {/* Upgrade success banner */}
@@ -95,6 +94,23 @@ export default async function DashboardPage({
             <div>
               <p className="font-bold text-emerald-800">Couple mode active!</p>
               <p className="text-sm text-emerald-700">You and your partner are now sharing a debt plan. You can both see and manage debts together.</p>
+            </div>
+          </div>
+        )}
+
+        {/* Cancellation notice */}
+        {justCancelled && (
+          <div className="rounded-2xl bg-amber-50 border border-amber-200 px-5 py-4 flex items-start gap-3">
+            <span className="text-2xl">⏳</span>
+            <div className="flex-1">
+              <p className="font-bold text-amber-800">Subscription cancelled</p>
+              <p className="text-sm text-amber-700 mt-1">
+                Your Pro access will remain active until the end of your current billing period.
+                After that, your account will revert to the free plan.
+              </p>
+              <p className="text-xs text-amber-600 mt-2">
+                Need to undo? Go to Billing Portal to reactivate anytime.
+              </p>
             </div>
           </div>
         )}

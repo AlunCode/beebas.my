@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { stripe } from '@/lib/stripe'
 import { createClient } from '@supabase/supabase-js'
+import { getResend, buildPaymentConfirmationHtml } from '@/lib/email'
 import type { Database } from '@/types/database'
 import type Stripe from 'stripe'
 
@@ -74,13 +75,120 @@ export async function POST(request: NextRequest) {
         break
       }
 
-      const status = ['active', 'trialing'].includes(subscription.status) ? 'pro' : 'free'
+      const isActive = ['active', 'trialing'].includes(subscription.status)
+      const status = isActive ? 'pro' : 'free'
       console.log(`[webhook] User ${userId} → subscription_status: ${status} (Stripe status: ${subscription.status})`)
 
-      await supabase
+      const { error: updateError } = await supabase
         .from('users')
         .update({ subscription_status: status })
         .eq('id', userId)
+
+      if (updateError) {
+        console.error(`[webhook] Failed to update user ${userId}:`, updateError)
+        return NextResponse.json({ error: 'Database update failed' }, { status: 500 })
+      }
+
+      // Send payment confirmation email when subscription becomes active
+      if (isActive && subscription.status === 'active') {
+        try {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('email')
+            .eq('id', userId)
+            .single()
+
+          if (userData?.email) {
+            const firstItem = subscription.items.data[0]
+            const amount = firstItem?.price?.unit_amount
+              ? firstItem.price.unit_amount / 100
+              : 0
+
+            const planName = firstItem?.price?.nickname || 'Pro'
+            const nextBilling = new Date((subscription as any).current_period_end * 1000)
+            const nextBillingDate = nextBilling.toLocaleDateString('en-MY', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })
+
+            const resend = getResend()
+            await resend.emails.send({
+              from: 'Beebas <noreply@beebas.my>',
+              to: userData.email,
+              subject: 'Payment Confirmation — Welcome to Beebas Pro!',
+              html: buildPaymentConfirmationHtml({
+                email: userData.email,
+                amount,
+                planName,
+                planType: 'subscription',
+                nextBillingDate
+              })
+            })
+            console.log(`[webhook] Sent payment confirmation email to ${userData.email}`)
+          }
+        } catch (emailError) {
+          console.error(`[webhook] Failed to send email for user ${userId}:`, emailError)
+          // Don't fail the webhook if email fails
+        }
+      }
+      break
+    }
+
+    case 'checkout.session.completed': {
+      const session = event.data.object as Stripe.Checkout.Session
+      const userId = session.metadata?.supabase_user_id
+
+      if (!userId) {
+        console.warn(`[webhook] No user found in checkout session metadata for session ${session.id}`)
+        break
+      }
+
+      // Only handle one-time payments; subscriptions are handled by customer.subscription.* events
+      if (session.mode === 'payment') {
+        console.log(`[webhook] One-time payment completed for user ${userId} → subscription_status: pro`)
+        const { error: paymentError } = await supabase
+          .from('users')
+          .update({ subscription_status: 'pro' })
+          .eq('id', userId)
+
+        if (paymentError) {
+          console.error(`[webhook] Failed to update user ${userId} after payment:`, paymentError)
+          return NextResponse.json({ error: 'Database update failed' }, { status: 500 })
+        }
+
+        // Send payment confirmation email
+        try {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('email')
+            .eq('id', userId)
+            .single()
+
+          if (userData?.email) {
+            const amount = session.amount_total ? session.amount_total / 100 : 0
+            const planName = 'Lifetime Pro'
+
+            const resend = getResend()
+            await resend.emails.send({
+              from: 'Beebas <noreply@beebas.my>',
+              to: userData.email,
+              subject: 'Payment Confirmation — Welcome to Beebas Pro!',
+              html: buildPaymentConfirmationHtml({
+                email: userData.email,
+                amount,
+                planName,
+                planType: 'lifetime',
+                nextBillingDate: 'Lifetime access'
+              })
+            })
+            console.log(`[webhook] Sent payment confirmation email to ${userData.email}`)
+          }
+        } catch (emailError) {
+          console.error(`[webhook] Failed to send email for user ${userId}:`, emailError)
+          // Don't fail the webhook if email fails
+        }
+      }
       break
     }
 
@@ -94,10 +202,15 @@ export async function POST(request: NextRequest) {
       }
 
       console.log(`[webhook] User ${userId} → subscription_status: cancelled`)
-      await supabase
+      const { error: deleteError } = await supabase
         .from('users')
         .update({ subscription_status: 'cancelled' })
         .eq('id', userId)
+
+      if (deleteError) {
+        console.error(`[webhook] Failed to update user ${userId}:`, deleteError)
+        return NextResponse.json({ error: 'Database update failed' }, { status: 500 })
+      }
       break
     }
 

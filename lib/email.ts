@@ -24,6 +24,76 @@ function fmt(n: number) {
   return `RM ${n.toLocaleString('en-MY', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
 }
 
+export function buildPaymentConfirmationHtml(data: {
+  email: string
+  amount: number
+  planName: string
+  planType: 'subscription' | 'lifetime'
+  nextBillingDate?: string
+}): string {
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Payment Confirmation — Beebas</title>
+</head>
+<body style="margin:0;padding:0;background:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f3f4f6;padding:32px 16px;">
+    <tr><td align="center">
+      <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+        <tr>
+          <td style="background:#1C1C1C;border-radius:16px 16px 0 0;padding:24px 32px;">
+            <div style="display:inline-flex;align-items:center;gap:8px;">
+              <span style="font-size:20px;">🐝</span>
+              <span style="color:#FFD000;font-weight:800;font-size:20px;letter-spacing:-0.5px;">Beebas</span>
+            </div>
+            <p style="color:rgba(255,255,255,0.4);font-size:12px;margin:6px 0 0 0;text-transform:uppercase;letter-spacing:0.08em;">Payment Confirmation</p>
+          </td>
+        </tr>
+        <tr>
+          <td style="background:#fff;padding:32px;border-radius:0 0 16px 16px;">
+            <h1 style="font-size:22px;font-weight:800;color:#1C1C1C;margin:0 0 6px 0;letter-spacing:-0.5px;">
+              Payment received!
+            </h1>
+            <p style="color:#888;font-size:14px;margin:0 0 28px 0;line-height:1.5;">
+              ${data.planType === 'lifetime'
+                ? `You've purchased <strong style="color:#1C1C1C;">${data.planName}</strong>. Enjoy lifetime access!`
+                : `Thanks for upgrading to <strong style="color:#1C1C1C;">${data.planName}</strong>. Your account is now active.`
+              }
+            </p>
+            <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+              <tr>
+                <td style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:18px 20px;">
+                  <p style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:0.08em;margin:0 0 6px 0;">Amount paid</p>
+                  <p style="font-size:24px;font-weight:800;color:#1C1C1C;margin:0;letter-spacing:-0.5px;">RM ${data.amount.toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
+                </td>
+              </tr>
+            </table>
+            ${data.planType === 'subscription' && data.nextBillingDate ? `
+            <p style="color:#888;font-size:14px;margin:0 0 6px 0;line-height:1.5;">
+              Next billing date: <strong style="color:#1C1C1C;">${data.nextBillingDate}</strong>
+            </p>
+            ` : ''}
+            <div style="text-align:center;margin:32px 0 8px 0;">
+              <a href="https://beebas.my/dashboard"
+                 style="display:inline-block;background:#FFD000;color:#1C1C1C;font-weight:800;font-size:15px;padding:14px 36px;border-radius:12px;text-decoration:none;letter-spacing:-0.3px;">
+                Go to dashboard →
+              </a>
+            </div>
+            <p style="color:#ccc;font-size:12px;text-align:center;margin:28px 0 0 0;line-height:1.6;">
+              Beebas · <a href="https://beebas.my" style="color:#ccc;text-decoration:none;">beebas.my</a><br>
+              Questions? Reply to this email or contact <a href="mailto:adminbeebas@gmail.com" style="color:#bbb;">adminbeebas@gmail.com</a>
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`
+}
+
 export function buildDigestHtml(d: DigestEmailData): string {
   const debtRows = d.debts.map(debt => `
     <tr>
