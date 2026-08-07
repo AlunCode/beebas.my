@@ -66,6 +66,47 @@ const PRO_FEATURES = [
   'Priority support',
 ]
 
+const pricingJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: 'Beebas Pricing',
+  description: 'Start free. Upgrade to Pro for unlimited debts, PDF export, couple mode, and more. RM 19/month or RM 149/year.',
+  url: 'https://beebas.my/pricing',
+  mainEntity: {
+    '@type': 'Product',
+    name: 'Beebas Pro',
+    description: 'Unlimited debts, PDF export, couple mode, milestone badges, priority support',
+    offers: [
+      {
+        '@type': 'Offer',
+        name: 'Pro Monthly',
+        price: '19',
+        priceCurrency: 'MYR',
+        priceValidUntil: '2027-12-31',
+        availability: 'https://schema.org/InStock',
+      },
+      {
+        '@type': 'Offer',
+        name: 'Pro Annual',
+        price: '149',
+        priceCurrency: 'MYR',
+        priceValidUntil: '2027-12-31',
+        availability: 'https://schema.org/InStock',
+      },
+    ],
+  },
+}
+
+const pricingFaqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: PRICING_FAQS.map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
+}
+
 export default async function PricingPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
@@ -93,6 +134,8 @@ export default async function PricingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(pricingFaqJsonLd) }} />
       {/* Navbar */}
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href={user ? '/dashboard' : '/'} className="flex items-center gap-2.5">

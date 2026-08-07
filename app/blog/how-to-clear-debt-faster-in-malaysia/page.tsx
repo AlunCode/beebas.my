@@ -36,7 +36,7 @@ const jsonLd = {
   headline: '7 Proven Techniques to Clear Your Debt Faster in Malaysia',
   description: 'From snowball and avalanche to 0% balance transfers and rate renegotiation — every debt repayment strategy Malaysians can use right now.',
   datePublished: '2026-04-24',
-  dateModified: '2026-04-24',
+  dateModified: '2026-08-07',
   author: { '@type': 'Organization', name: 'Beebas', url: 'https://beebas.my' },
   publisher: {
     '@type': 'Organization',
@@ -48,10 +48,21 @@ const jsonLd = {
   mainEntityOfPage: 'https://beebas.my/blog/how-to-clear-debt-faster-in-malaysia',
 }
 
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://beebas.my' },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: 'https://beebas.my/blog' },
+    { '@type': 'ListItem', position: 3, name: '7 Proven Techniques to Clear Your Debt Faster in Malaysia' },
+  ],
+}
+
 export default function ArticlePage() {
   return (
     <div className="min-h-screen bg-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
       {/* Navbar */}
       <nav className="bg-[#1C1C1C] px-6 py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
@@ -315,6 +326,21 @@ export default function ArticlePage() {
               <Button variant="outline" className="rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold h-11 px-8">
                 Try the free calculator
               </Button>
+            </Link>
+          </div>
+        </div>
+
+        {/* Related Articles */}
+        <div className="mt-14">
+          <h3 className="text-lg font-extrabold text-[#1C1C1C] mb-4">Related articles</h3>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Link href="/blog/credit-card-minimum-payment-trap-malaysia" className="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:shadow-md transition-shadow">
+              <span className="text-xs font-bold text-[#8B6000]">Credit Cards</span>
+              <p className="font-bold text-sm text-[#1C1C1C] mt-1 leading-snug">The Minimum Payment Trap: Why Your Credit Card Debt Never Seems to Go Down</p>
+            </Link>
+            <Link href="/blog/how-to-negotiate-with-your-bank-in-malaysia" className="rounded-xl border border-gray-100 bg-gray-50 p-5 hover:shadow-md transition-shadow">
+              <span className="text-xs font-bold text-[#8B6000]">Banking</span>
+              <p className="font-bold text-sm text-[#1C1C1C] mt-1 leading-snug">How to Negotiate With Your Bank in Malaysia (Scripts Included)</p>
             </Link>
           </div>
         </div>
