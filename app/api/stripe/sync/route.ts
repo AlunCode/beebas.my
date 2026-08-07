@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { stripe } from '@/lib/stripe'
+import type { Database } from '@/types/database'
 
 /**
  * POST /api/stripe/sync
@@ -39,18 +40,29 @@ export async function POST() {
       limit: 10,
     })
 
-    // Determine the correct status
+    // Determine the correct status — preserve lifetime and planner statuses
     const activeOrTrialing = subscriptions.data.find(
       (sub) => sub.status === 'active' || sub.status === 'trialing'
     )
 
-    const newStatus = activeOrTrialing ? 'pro' : 'free'
+    let newStatus: Database['public']['Enums']['subscription_status'] = 'free'
+    let roleUpdate: { role?: Database['public']['Enums']['user_role'] } = {}
+
+    if (activeOrTrialing) {
+      const planType = activeOrTrialing.metadata?.plan_type
+      if (planType === 'planner_annual' || planType === 'planner_monthly') {
+        newStatus = planType as Database['public']['Enums']['subscription_status']
+        roleUpdate = { role: 'planner' }
+      } else {
+        newStatus = 'pro'
+      }
+    }
 
     // Update via admin client to bypass RLS
     const admin = createAdminClient()
     await admin
       .from('users')
-      .update({ subscription_status: newStatus })
+      .update({ subscription_status: newStatus, ...roleUpdate })
       .eq('id', user.id)
 
     console.log(`[sync] User ${user.id} subscription_status → ${newStatus}`)

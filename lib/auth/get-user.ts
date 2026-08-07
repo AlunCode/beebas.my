@@ -22,5 +22,15 @@ export async function getAuthUser() {
 }
 
 export function isPro(user: UserRow) {
-  return user.subscription_status === 'pro'
+  const proStatuses = ['pro', 'pro_lifetime', 'planner_monthly', 'planner_annual']
+  return proStatuses.includes(user.subscription_status)
+}
+
+export function isLifetime(user: UserRow) {
+  return user.subscription_status === 'pro_lifetime'
+}
+
+export function isPlanner(user: UserRow) {
+  return user.role === 'planner' ||
+    ['planner_monthly', 'planner_annual'].includes(user.subscription_status)
 }

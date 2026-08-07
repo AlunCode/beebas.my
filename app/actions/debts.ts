@@ -51,8 +51,9 @@ export async function markDebtPaid(debtId: string) {
 
   revalidatePath('/dashboard')
 
-  // Only award milestones to Pro users
-  if (subscription_status !== 'pro') return { success: true, milestones: [] as milestone_type[] }
+  // Only award milestones to Pro users (includes pro, pro_lifetime, planner_monthly, planner_annual)
+  const proStatuses = ['pro', 'pro_lifetime', 'planner_monthly', 'planner_annual']
+  if (!proStatuses.includes(subscription_status)) return { success: true, milestones: [] as milestone_type[] }
 
   const remaining = allDebts.filter(d => d.id !== debtId)
   const totalOriginal = allDebts.reduce((s, d) => s + (d.original_balance ?? d.balance), 0)

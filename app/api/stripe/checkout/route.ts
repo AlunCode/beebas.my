@@ -45,6 +45,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Price ID required' }, { status: 400 })
     }
 
+    // Enforce lifetime plan limit (100 users max)
+    if (mode === 'payment') {
+      const { count } = await supabase
+        .from('users')
+        .select('id', { count: 'exact', head: true })
+        .eq('subscription_status', 'pro_lifetime')
+
+      if (count && count >= 100) {
+        return NextResponse.json(
+          { error: 'Lifetime plan is sold out. Please choose the annual plan instead.' },
+          { status: 400 }
+        )
+      }
+    }
+
     // --- Look up existing Stripe customer ---
     const { data: dbUser, error: dbError } = await supabase
       .from('users')

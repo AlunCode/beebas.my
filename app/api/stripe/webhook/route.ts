@@ -76,12 +76,28 @@ export async function POST(request: NextRequest) {
       }
 
       const isActive = ['active', 'trialing'].includes(subscription.status)
-      const status = isActive ? 'pro' : 'free'
-      console.log(`[webhook] User ${userId} → subscription_status: ${status} (Stripe status: ${subscription.status})`)
+
+      // Determine if this is a planner subscription from metadata
+      const planType = subscription.metadata?.plan_type
+      let status: Database['public']['Enums']['subscription_status']
+      let roleUpdate: { role?: Database['public']['Enums']['user_role'] } = {}
+
+      if (isActive) {
+        if (planType === 'planner_annual' || planType === 'planner_monthly') {
+          status = planType as Database['public']['Enums']['subscription_status']
+          roleUpdate = { role: 'planner' }
+        } else {
+          status = 'pro'
+        }
+      } else {
+        status = 'free'
+      }
+
+      console.log(`[webhook] User ${userId} → subscription_status: ${status}, role: ${roleUpdate.role ?? 'unchanged'} (Stripe status: ${subscription.status})`)
 
       const { error: updateError } = await supabase
         .from('users')
-        .update({ subscription_status: status })
+        .update({ subscription_status: status, ...roleUpdate })
         .eq('id', userId)
 
       if (updateError) {
@@ -146,10 +162,10 @@ export async function POST(request: NextRequest) {
 
       // Only handle one-time payments; subscriptions are handled by customer.subscription.* events
       if (session.mode === 'payment') {
-        console.log(`[webhook] One-time payment completed for user ${userId} → subscription_status: pro`)
+        console.log(`[webhook] One-time payment completed for user ${userId} → subscription_status: pro_lifetime`)
         const { error: paymentError } = await supabase
           .from('users')
-          .update({ subscription_status: 'pro' })
+          .update({ subscription_status: 'pro_lifetime' })
           .eq('id', userId)
 
         if (paymentError) {

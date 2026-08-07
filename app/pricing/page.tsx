@@ -80,7 +80,16 @@ export default async function PricingPage() {
     subscriptionStatus = data?.subscription_status ?? 'free'
   }
 
-  const isPro = subscriptionStatus === 'pro'
+  const proStatuses = ['pro', 'pro_lifetime', 'planner_monthly', 'planner_annual']
+  const isPro = proStatuses.includes(subscriptionStatus)
+
+  // Check lifetime plan availability
+  const { count: lifetimeCount } = await supabase
+    .from('users')
+    .select('id', { count: 'exact', head: true })
+    .eq('subscription_status', 'pro_lifetime')
+
+  const lifetimeSoldOut = (lifetimeCount ?? 0) >= 100
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -182,7 +191,7 @@ export default async function PricingPage() {
 
           {/* Annual */}
           <PlanCard
-            isHidden
+            isHidden={!lifetimeSoldOut}
             name="Pro Annual"
             price="RM 149"
             period="per year"
@@ -207,6 +216,7 @@ export default async function PricingPage() {
 
           {/* Lifetime */}
           <PlanCard
+            isHidden={lifetimeSoldOut}
             name="Pro Lifetime"
             price="RM 80"
             period="one-time"
