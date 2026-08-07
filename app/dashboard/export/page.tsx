@@ -72,7 +72,7 @@ export default async function ExportPage({
         }
       `}</style>
 
-      <div className="bg-white min-h-screen p-8 max-w-4xl mx-auto text-[#1C1C1C]" style={{ fontFamily: 'sans-serif' }}>
+      <div className="bg-white min-h-screen p-4 sm:p-8 max-w-4xl mx-auto text-[#1C1C1C]" style={{ fontFamily: 'sans-serif' }}>
 
         {/* Back button — hidden when printing */}
         <div className="no-print mb-6">
@@ -99,7 +99,7 @@ export default async function ExportPage({
         {/* Summary cards */}
         <section style={{ marginBottom: 32 }}>
           <h2 style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#666', marginBottom: 12 }}>Summary</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: 12 }}>
             {[
               { label: 'Total debt', value: fmtInt(totalDebt) },
               { label: 'Debt-free date', value: monthLabel(result.debtFreeDate) },
@@ -161,7 +161,8 @@ export default async function ExportPage({
           <h2 style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#666', marginBottom: 12 }}>
             Monthly Schedule{result.months.length > 36 ? ' (first 36 months)' : ''}
           </h2>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12 }}>
+          <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 12, minWidth: 400 }}>
             <thead>
               <tr style={{ background: '#f3f4f6' }}>
                 {['Mo.', 'Date', 'Total Balance', 'Interest', 'Payment'].map((h, i) => (
@@ -184,6 +185,7 @@ export default async function ExportPage({
               })}
             </tbody>
           </table>
+          </div>
         </section>
 
         {/* Footer */}

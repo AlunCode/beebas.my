@@ -116,7 +116,7 @@ export default async function DashboardPage({
         )}
 
         {/* Header */}
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
           <div>
             <h1 className="text-2xl font-extrabold tracking-tight text-[#1C1C1C]">Your Debts</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
@@ -133,7 +133,9 @@ export default async function DashboardPage({
                   }`}
             </p>
           </div>
-          <DebtForm debtCount={debtList.length} isPro={pro} />
+          <div className="shrink-0">
+            <DebtForm debtCount={debtList.length} isPro={pro} />
+          </div>
         </div>
 
         {/* Free plan limit banner — only when exactly at the limit (hidden debts card handles >3) */}

@@ -308,29 +308,29 @@ export default function LandingPage() {
               Why Beebas beats a spreadsheet
             </h2>
           </div>
-          <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
-            <table className="w-full text-sm">
+          <div className="rounded-2xl border border-gray-100 overflow-hidden shadow-sm overflow-x-auto">
+            <table className="w-full text-sm min-w-[480px]">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-100">
-                  <th className="text-left px-5 py-3.5 font-semibold text-muted-foreground">Feature</th>
-                  <th className="px-5 py-3.5 font-bold text-[#1C1C1C] text-center">
+                  <th className="text-left px-4 sm:px-5 py-3.5 font-semibold text-muted-foreground">Feature</th>
+                  <th className="px-4 sm:px-5 py-3.5 font-bold text-[#1C1C1C] text-center">
                     <span className="inline-flex items-center gap-1.5">🐝 Beebas</span>
                   </th>
-                  <th className="px-5 py-3.5 font-semibold text-muted-foreground text-center">Spreadsheet</th>
-                  <th className="px-5 py-3.5 font-semibold text-muted-foreground text-center">Others</th>
+                  <th className="px-4 sm:px-5 py-3.5 font-semibold text-muted-foreground text-center">Spreadsheet</th>
+                  <th className="px-4 sm:px-5 py-3.5 font-semibold text-muted-foreground text-center">Others</th>
                 </tr>
               </thead>
               <tbody>
                 {COMPARISON.map((row, i) => (
                   <tr key={row.feature} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
-                    <td className="px-5 py-3.5 text-[#1C1C1C]">{row.feature}</td>
-                    <td className="px-5 py-3.5 text-center">
+                    <td className="px-4 sm:px-5 py-3.5 text-[#1C1C1C]">{row.feature}</td>
+                    <td className="px-4 sm:px-5 py-3.5 text-center">
                       {row.beebas ? <span className="text-emerald-500 font-bold">✓</span> : <span className="text-gray-300">–</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-center">
+                    <td className="px-4 sm:px-5 py-3.5 text-center">
                       {row.spreadsheet ? <span className="text-emerald-500 font-bold">✓</span> : <span className="text-gray-300">–</span>}
                     </td>
-                    <td className="px-5 py-3.5 text-center">
+                    <td className="px-4 sm:px-5 py-3.5 text-center">
                       {row.others ? <span className="text-emerald-500 font-bold">✓</span> : <span className="text-gray-300">–</span>}
                     </td>
                   </tr>
@@ -429,7 +429,7 @@ export default function LandingPage() {
               <div className="w-7 h-7 rounded-full bg-[#FFD000] flex items-center justify-center text-sm">🐝</div>
               <span className="text-[#FFD000] font-bold tracking-tight">Beebas</span>
             </div>
-            <div className="flex items-center gap-6 text-sm text-white/40">
+            <div className="flex flex-wrap items-center justify-center sm:justify-end gap-x-6 gap-y-2 text-sm text-white/40">
               <Link href="/about" className="hover:text-white/70 transition-colors">About</Link>
               <Link href="/blog" className="hover:text-white/70 transition-colors">Blog</Link>
               <Link href="/pricing" className="hover:text-white/70 transition-colors">Pricing</Link>

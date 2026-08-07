@@ -164,12 +164,12 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-0.5 sm:gap-1 shrink-0">
                   {/* Mark paid */}
                   <button
                     onClick={() => setConfirm({ id: debt.id, name: debt.name, action: 'paid' })}
                     disabled={isBusy}
-                    className="text-emerald-600 hover:text-emerald-700 transition-colors px-2.5 py-1.5 rounded-lg hover:bg-emerald-50 text-xs font-bold disabled:opacity-40 flex items-center gap-1.5"
+                    className="text-emerald-600 hover:text-emerald-700 transition-colors px-2 sm:px-2.5 py-2 sm:py-1.5 rounded-lg hover:bg-emerald-50 text-xs font-bold disabled:opacity-40 flex items-center gap-1.5 min-h-[44px] sm:min-h-0"
                     aria-label="Mark as paid off"
                   >
                     {isPaying ? (
@@ -192,7 +192,7 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
                   <button
                     onClick={() => setConfirm({ id: debt.id, name: debt.name, action: 'delete' })}
                     disabled={isBusy}
-                    className="text-muted-foreground hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 disabled:opacity-40"
+                    className="text-muted-foreground hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 disabled:opacity-40 min-h-[44px] min-w-[44px] flex items-center justify-center"
                     aria-label="Delete debt"
                   >
                     {isDeleting ? (

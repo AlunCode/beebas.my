@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react'
 import { Slider } from '@/components/ui/slider'
 import { PayoffChart } from './payoff-chart'
+import { CsvExportButton } from './csv-export-button'
 import { calculateBoth } from '@/lib/calculator/engine'
 import type { Debt, Strategy } from '@/lib/calculator/types'
 import type { Database } from '@/types/database'
@@ -84,21 +85,33 @@ export function PayoffCalculator({ debts, isPro = false }: Props) {
         <div className="flex items-center justify-between mb-3">
           <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Payoff strategy</p>
           {isPro ? (
-            <a
-              href={`/dashboard/export?strategy=${strategy}&extra=${extraPayment}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs font-bold text-[#1C1C1C] bg-[#FFD000] hover:bg-[#f0c400] px-3 py-1.5 rounded-lg transition-colors"
-            >
-              📄 Export PDF
-            </a>
+            <div className="flex items-center gap-2">
+              <CsvExportButton
+                debts={debts}
+                strategy={strategy}
+                extraPayment={extraPayment}
+              />
+              <a
+                href={`/dashboard/export?strategy=${strategy}&extra=${extraPayment}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-bold text-[#1C1C1C] bg-[#FFD000] hover:bg-[#f0c400] px-3 py-1.5 rounded-lg transition-colors"
+              >
+                📄 Export PDF
+              </a>
+            </div>
           ) : (
-            <a
-              href="/pricing"
-              className="text-xs font-medium text-muted-foreground bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
-            >
-              📄 Export PDF · Pro
-            </a>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground bg-gray-100 px-3 py-1.5 rounded-lg">
+                📊 Export CSV · Pro
+              </span>
+              <a
+                href="/pricing"
+                className="text-xs font-medium text-muted-foreground bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg transition-colors"
+              >
+                📄 Export PDF · Pro
+              </a>
+            </div>
           )}
         </div>
         <div className="flex gap-2">
