@@ -291,11 +291,11 @@ export default function ArticlePage() {
             <ul className="space-y-2 text-muted-foreground mb-4">
               <li className="flex items-start gap-2">
                 <span className="text-[#FFD000] font-bold shrink-0 mt-0.5">→</span>
-                <span><strong className="text-[#1C1C1C]">Snowball</strong> — serang baki terkecil dulu. Cepat dapat kemenangan, kekal bermotivasi.</span>
+                <span><strong className="text-[#1C1C1C]">Snowball</strong> — selesaikan baki terkecil dulu. Cepat dapat kemenangan, kekal bermotivasi.</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#FFD000] font-bold shrink-0 mt-0.5">→</span>
-                <span><strong className="text-[#1C1C1C]">Avalanche</strong> — serang kadar faedah tertinggi dulu. Jimat lebih banyak wang secara matematik.</span>
+                <span><strong className="text-[#1C1C1C]">Avalanche</strong> — selesaikan kadar faedah tertinggi dulu. Jimat lebih banyak wang secara matematik.</span>
               </li>
             </ul>
             <p className="text-muted-foreground leading-relaxed mb-4">

@@ -130,7 +130,7 @@ export default function ArticlePage() {
             <ul className="space-y-2 text-muted-foreground mb-4">
               <li className="flex items-start gap-2">
                 <span className="text-[#FFD000] font-bold shrink-0 mt-0.5">→</span>
-                <span><strong className="text-[#1C1C1C]">Kaedselan kewangan percuma</strong> — sesi satu-lawan-satu dengan kaunselor bertauliah</span>
+                <span><strong className="text-[#1C1C1C]">Kaunseling percuma</strong> — sesi satu-lawan-satu dengan kaunselor bertauliah</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="text-[#FFD000] font-bold shrink-0 mt-0.5">→</span>
@@ -194,7 +194,7 @@ export default function ArticlePage() {
               <div className="flex items-start gap-4">
                 <div className="w-8 h-8 rounded-full bg-[#FFD000] flex items-center justify-center text-sm font-bold text-[#1C1C1C] shrink-0">2</div>
                 <div>
-                  <h3 className="font-bold text-[#1C1C1C] mb-1">Sesi Kaedselan</h3>
+                  <h3 className="font-bold text-[#1C1C1C] mb-1">Sesi Kaunseling</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed">
                     Anda akan bertemu kaunselor yang akan semak situasi kewangan anda — pendapatan, hutang, perbelanjaan. Sesi ini percuma dan sulit.
                   </p>
@@ -313,7 +313,7 @@ export default function ArticlePage() {
                     { aspect: 'Kadar faedah', akpk: 'Biasanya lebih rendah', self: 'Bergantung pada bank' },
                     { aspect: 'CCRIS', akpk: 'Direkodkan', self: 'Tiada rekod tambahan' },
                     { aspect: 'Flexibiliti', akpk: 'Tetap mengikut pelan', self: 'Anda kawal sepenuhnya' },
-                    { aspect: 'Cocok untuk', akpk: 'Hutang besar, tak mampu bayar', self: 'Hutang kecil, displin tinggi' },
+                    { aspect: 'Sesuai untuk', akpk: 'Hutang besar, tak mampu bayar', self: 'Hutang kecil, displin tinggi' },
                   ].map((row, i) => (
                     <tr key={row.aspect} className={i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'}>
                       <td className="px-4 py-3 font-semibold text-[#1C1C1C]">{row.aspect}</td>

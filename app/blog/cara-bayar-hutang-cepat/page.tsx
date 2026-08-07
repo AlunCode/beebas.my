@@ -131,7 +131,7 @@ export default function ArticlePage() {
               Logiknya bukan matematik — ia psikologi. Setiap hutang yang anda langsaikan memberi anda kemenangan, dan kemenangan membina momentum. Dave Ramsey mempopularkan kaedah ini di Amerika Syarikat; ia berfungsi sama baik di sini.
             </p>
             <Callout icon="📌" title="Contoh">
-              Anda ada tiga hutang: RM 1,500 pinjaman peribadi, RM 4,200 kad kredit, RM 18,000 kereta. Serang RM 1,500 dulu. Bila habis dalam 3 bulan, ambil bayaran itu dan tambah pada serangan kad kredit. Kemudian gaul kedua-duanya ke pinjaman kereta.
+              Anda ada tiga hutang: RM 1,500 pinjaman peribadi, RM 4,200 kad kredit, RM 18,000 kereta. Selesaikan RM 1,500 dulu. Bila habis dalam 3 bulan, ambil bayaran itu dan tambah pada serangan kad kredit. Kemudian gaul kedua-duanya ke pinjaman kereta.
             </Callout>
             <p className="text-muted-foreground leading-relaxed">
               <strong className="text-[#1C1C1C]">Cocok untuk:</strong> Orang yang perlukan kemenangan cepat untuk kekal bermotivasi.
@@ -142,7 +142,7 @@ export default function ArticlePage() {
           <section>
             <h2 className="text-2xl font-extrabold mb-4">2. Debt Avalanche</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Mekanik yang sama seperti snowball — bayar minimum untuk semua, hantar tunai lebih pada satu sasaran — tapi anda serang <strong className="text-[#1C1C1C]">kadar faedah tertinggi</strong> terlebih dahulu.
+              Mekanik yang sama seperti snowball — bayar minimum untuk semua, hantar tunai lebih pada satu sasaran — tapi anda selesaikan <strong className="text-[#1C1C1C]">kadar faedah tertinggi</strong> terlebih dahulu.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
               Secara matematik, avalanche menjimatkan lebih banyak wang. Kad kredit pada 18% setahun membelanjakan anda jauh lebih banyak berbanding pinjaman kereta pada 3.5% setahun. Melangsaikan hutang 18% dulu menghentikan pendarahan itu.

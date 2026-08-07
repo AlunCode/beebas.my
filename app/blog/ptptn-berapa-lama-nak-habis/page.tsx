@@ -270,7 +270,7 @@ export default function ArticlePage() {
                   Jangan layan PTPTN secara berasingan. Masukkan ia ke dalam kalkulator hutang anda bersama semua hutang lain. Gunakan strategi snowball atau avalanche untuk tentukan bila dan berapa banyak untuk bayar pada PTPTN berbanding hutang lain.
                 </p>
                 <Tip>
-                  Jika kad kredit anda pada 18% dan PTPTN pada 1%, bayar minimum pada PTPTN dan serang kad kredit dulu. Kemudian masukkan semula wang itu ke PTPTN selepas kad kredit habis.
+                  Jika kad kredit anda pada 18% dan PTPTN pada 1%, bayar minimum pada PTPTN dan selesaikan kad kredit dulu. Kemudian masukkan semula wang itu ke PTPTN selepas kad kredit habis.
                 </Tip>
               </div>
             </div>
@@ -280,16 +280,16 @@ export default function ArticlePage() {
           <section>
             <h2 className="text-2xl font-extrabold mb-4">5. PTPTN vs Hutang Lain — Mana Yang Patut Dibayar Dulu?</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Peraturan mudah: <strong className="text-[#1C1C1C]">serang kadar faedah tertinggi dulu</strong> (strategi avalanche). Dengan PTPTN pada 1%, ia sepatutnya menjadi yang terakhir dalam senarai anda — kecuali jika anda berisiko disenarai hitam.
+              Peraturan mudah: <strong className="text-[#1C1C1C]">selesaikan kadar faedah tertinggi dulu</strong> (strategi avalanche). Dengan PTPTN pada 1%, ia sepatutnya menjadi yang terakhir dalam senarai anda — kecuali jika anda berisiko disenarai hitam.
             </p>
             <p className="text-muted-foreground leading-relaxed mb-4">
               <strong className="text-[#1C1C1C]">Keutamaan pembayaran:</strong>
             </p>
             <ol className="space-y-2 text-muted-foreground mb-4 list-decimal list-inside">
-              <li><strong className="text-[#1C1C1C]">Kad kredit</strong> (15-18% setahun) — serang dahulu</li>
+              <li><strong className="text-[#1C1C1C]">Kad kredit</strong> (15-18% setahun) — selesaikan dahulu</li>
               <li><strong className="text-[#1C1C1C]">Pinjaman peribadi</strong> (6-12% setahun)</li>
               <li><strong className="text-[#1C1C1C]">Pinjaman kereta</strong> (3-4.5% setahun)</li>
-              <li><strong className="text-[#1C1C1C]">PTPTN</strong> (1% setahun) — bayar minimum sambil serang yang lain</li>
+              <li><strong className="text-[#1C1C1C]">PTPTN</strong> (1% setahun) — bayar minimum sambil selesaikan yang lain</li>
             </ol>
             <p className="text-muted-foreground leading-relaxed">
               Kecuali — jika PTPTN anda menghampiri tempoh 10 tahun atau anda berisiko disenarai hitam. Dalam kes itu, pastikan anda sentiasa bayar minimum PTPTN untuk kekal selamat.
