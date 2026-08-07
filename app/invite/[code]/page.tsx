@@ -14,7 +14,9 @@ export default async function InvitePage({
 
   // Check auth without forcing redirect (so we can redirect with the return URL)
   const { data: { user: authUser } } = await supabase.auth.getUser()
-  if (!authUser) redirect(`/login?redirect=/invite/${code}`)
+  if (!authUser) {
+    redirect(`/login?redirect=/invite/${code}`)
+  }
 
   const [{ data: dbUser }, { data: inviter }] = await Promise.all([
     supabase.from('users').select('id, email, partner_id').eq('id', authUser.id).single(),

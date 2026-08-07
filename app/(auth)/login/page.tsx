@@ -6,11 +6,13 @@ import { SubmitButton } from '../_components/submit-button'
 import { SocialButtons } from '../_components/social-buttons'
 
 
-export default function LoginPage({
+export default async function LoginPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; message?: string }>
+  searchParams: Promise<{ error?: string; message?: string; redirect?: string }>
 }) {
+  const params = await searchParams
+  const redirectTo = params.redirect || '/dashboard'
   return (
     <div className="min-h-screen flex">
       {/* Left panel — brand */}
@@ -54,6 +56,7 @@ export default function LoginPage({
           </div>
 
           <form action={login} className="space-y-5">
+            <input type="hidden" name="redirect" value={redirectTo} />
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-semibold text-[#1C1C1C]">Email</Label>
               <Input

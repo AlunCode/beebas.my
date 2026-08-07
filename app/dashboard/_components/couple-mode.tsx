@@ -47,6 +47,7 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
       } else {
         setLinked(false)
         setCurrentPartnerEmail(null)
+        setCode(null)
         toast('Left couple mode')
       }
     })
@@ -122,7 +123,7 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
             </button>
           )}
         </div>
-      ) : inviteUrl ? (
+      ) : !linked && inviteUrl ? (
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">Share this link with your partner. It expires once accepted.</p>
           <div className="flex items-center gap-2">
@@ -144,7 +145,7 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
             {pending ? 'Generating…' : 'Generate new link'}
           </button>
         </div>
-      ) : (
+      ) : !linked ? (
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground">
             Invite your partner or family member to share your debt plan. Both of you will see and manage debts together.
@@ -157,7 +158,7 @@ export function CoupleModeCard({ isPro, partnerId, partnerEmail, existingCode }:
             {pending ? 'Generating…' : 'Generate invite link'}
           </Button>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }

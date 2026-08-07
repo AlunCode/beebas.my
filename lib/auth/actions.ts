@@ -1,6 +1,7 @@
 'use server'
 
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
 export async function login(formData: FormData) {
@@ -15,7 +16,8 @@ export async function login(formData: FormData) {
     redirect(`/login?error=${encodeURIComponent(error.message)}`)
   }
 
-  redirect('/dashboard')
+  const redirectTo = formData.get('redirect') as string
+  redirect(redirectTo || '/dashboard')
 }
 
 export async function signup(formData: FormData) {
@@ -35,7 +37,22 @@ export async function signup(formData: FormData) {
 
   // If email confirmation is disabled, session is returned immediately
   if (data.session) {
-    redirect('/dashboard')
+    const redirectTo = formData.get('redirect') as string
+    redirect(redirectTo || '/dashboard')
+  }
+
+  // If email confirmation required, store redirect in cookie and pass via query param
+  const redirectTo = formData.get('redirect') as string
+  if (redirectTo && redirectTo !== '/dashboard') {
+    const cookieStore = await cookies()
+    cookieStore.set('beebas_post_signup_redirect', redirectTo, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 days
+      path: '/',
+    })
+    redirect(`/login?message=Check your email to confirm your account&redirect=${encodeURIComponent(redirectTo)}`)
   }
 
   redirect('/login?message=Check your email to confirm your account')

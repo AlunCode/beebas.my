@@ -1,11 +1,17 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import type { EmailOtpType } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
   const next = searchParams.get('next') ?? '/dashboard'
-  const redirectTo = new URL(next, origin)
+  
+  // Check for stored redirect from signup flow (e.g., invite link)
+  const cookieStore = await cookies()
+  const storedRedirect = cookieStore.get('beebas_post_signup_redirect')?.value
+  const redirectPath = storedRedirect || next
+  const redirectTo = new URL(redirectPath, origin)
   const errorRedirect = new URL('/login', origin)
 
   const supabase = await createClient()
@@ -16,7 +22,11 @@ export async function GET(request: NextRequest) {
 
   if (token_hash && type) {
     const { error } = await supabase.auth.verifyOtp({ token_hash, type })
-    if (!error) return NextResponse.redirect(redirectTo)
+    if (!error) {
+      // Clear the redirect cookie
+      cookieStore.delete('beebas_post_signup_redirect')
+      return NextResponse.redirect(redirectTo)
+    }
     errorRedirect.searchParams.set('error', error.message)
     return NextResponse.redirect(errorRedirect)
   }
@@ -25,7 +35,11 @@ export async function GET(request: NextRequest) {
   const code = searchParams.get('code')
   if (code) {
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    if (!error) return NextResponse.redirect(redirectTo)
+    if (!error) {
+      // Clear the redirect cookie
+      cookieStore.delete('beebas_post_signup_redirect')
+      return NextResponse.redirect(redirectTo)
+    }
     errorRedirect.searchParams.set('error', error.message)
     return NextResponse.redirect(errorRedirect)
   }

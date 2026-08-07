@@ -8,9 +8,10 @@ import { SocialButtons } from '../_components/social-buttons'
 export default async function SignupPage({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string; redirect?: string }>
 }) {
   const params = await searchParams
+  const redirectTo = params.redirect || '/dashboard'
 
   return (
     <div className="min-h-screen flex">
@@ -68,6 +69,7 @@ export default async function SignupPage({
           </div>
 
           <form action={signup} className="space-y-5">
+            <input type="hidden" name="redirect" value={redirectTo} />
             <div className="space-y-1.5">
               <Label htmlFor="email" className="text-sm font-semibold text-[#1C1C1C]">Email</Label>
               <Input

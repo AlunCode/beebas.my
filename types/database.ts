@@ -4,7 +4,8 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 
 export type debt_type = "personal_loan" | "credit_card" | "ptptn" | "car_loan" | "home_loan" | "bnpl" | "aeon_credit" | "other"
 export type milestone_type = "first_debt_paid" | "halfway_point" | "streak_3_months" | "streak_6_months" | "streak_12_months" | "all_debts_paid"
-export type subscription_status = "free" | "pro" | "cancelled"
+export type subscription_status = "free" | "pro" | "cancelled" | "pro_lifetime" | "planner_monthly" | "planner_annual"
+export type user_role = "individual" | "planner"
 
 export interface Database {
   public: {
@@ -20,6 +21,7 @@ export interface Database {
           debt_type: debt_type
           original_balance: number | null
           custom_category: string | null
+          client_id: string | null
           created_at: string
           updated_at: string
         }
@@ -33,6 +35,7 @@ export interface Database {
           debt_type?: debt_type
           original_balance?: number | null
           custom_category?: string | null
+          client_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -46,6 +49,7 @@ export interface Database {
           debt_type?: debt_type
           original_balance?: number | null
           custom_category?: string | null
+          client_id?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -58,6 +62,7 @@ export interface Database {
           type: milestone_type
           achieved_at: string
           debt_id: string | null
+          client_id: string | null
         }
         Insert: {
           id?: string
@@ -65,6 +70,8 @@ export interface Database {
           type: milestone_type
           achieved_at?: string
           debt_id?: string | null
+          client_id?: string | null
+          created_at?: string
         }
         Update: {
           id?: string
@@ -72,6 +79,8 @@ export interface Database {
           type?: milestone_type
           achieved_at?: string
           debt_id?: string | null
+          client_id?: string | null
+          created_at?: string
         }
         Relationships: []
       }
@@ -83,6 +92,7 @@ export interface Database {
           amount: number
           payment_date: string
           notes: string | null
+          client_id: string | null
           created_at: string
         }
         Insert: {
@@ -92,6 +102,7 @@ export interface Database {
           amount: number
           payment_date: string
           notes?: string | null
+          client_id?: string | null
           created_at?: string
         }
         Update: {
@@ -101,6 +112,7 @@ export interface Database {
           amount?: number
           payment_date?: string
           notes?: string | null
+          client_id?: string | null
           created_at?: string
         }
         Relationships: []
@@ -115,6 +127,7 @@ export interface Database {
           couple_invite_code: string | null
           digest_opted_out: boolean
           digest_last_sent: string | null
+          role: user_role
           created_at: string
           updated_at: string
         }
@@ -127,6 +140,7 @@ export interface Database {
           couple_invite_code?: string | null
           digest_opted_out?: boolean
           digest_last_sent?: string | null
+          role?: user_role
           created_at?: string
           updated_at?: string
         }
@@ -139,10 +153,49 @@ export interface Database {
           couple_invite_code?: string | null
           digest_opted_out?: boolean
           digest_last_sent?: string | null
+          role?: user_role
           created_at?: string
           updated_at?: string
         }
         Relationships: []
+      }
+      clients: {
+        Row: {
+          id: string
+          planner_id: string
+          name: string
+          email: string
+          notes: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          planner_id: string
+          name: string
+          email: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          planner_id?: string
+          name?: string
+          email?: string
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_planner_id_fkey"
+            columns: ["planner_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: Record<string, never>
@@ -151,7 +204,8 @@ export interface Database {
     Enums: {
       debt_type: "personal_loan" | "credit_card" | "ptptn" | "car_loan" | "home_loan" | "bnpl" | "aeon_credit" | "other"
       milestone_type: "first_debt_paid" | "halfway_point" | "streak_3_months" | "streak_6_months" | "streak_12_months" | "all_debts_paid"
-      subscription_status: "free" | "pro" | "cancelled"
+      subscription_status: "free" | "pro" | "cancelled" | "pro_lifetime" | "planner_monthly" | "planner_annual"
+      user_role: "individual" | "planner"
     }
   }
 }
