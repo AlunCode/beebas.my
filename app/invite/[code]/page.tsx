@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import { LinkButton } from '@/components/ui/link-button'
 import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
 import { AcceptButton } from './_components/accept-button'
 
 export default async function InvitePage({
@@ -18,10 +18,12 @@ export default async function InvitePage({
     redirect(`/login?redirect=/invite/${code}`)
   }
 
-  const [{ data: dbUser }, { data: inviter }] = await Promise.all([
+  const [{ data: dbUser }, { data: inviterRows }] = await Promise.all([
     supabase.from('users').select('id, email, partner_id').eq('id', authUser.id).single(),
-    supabase.from('users').select('id, email, partner_id').eq('couple_invite_code', code).maybeSingle(),
+    supabase.rpc('lookup_inviter', { invite_code: code }),
   ])
+
+  const inviter = inviterRows?.[0] ?? null
 
   if (!dbUser) redirect('/login')
 
@@ -38,29 +40,23 @@ export default async function InvitePage({
           {!inviter ? (
             <div className="text-center">
               <p className="text-muted-foreground mb-6">This invite link is invalid or has already been used.</p>
-              <Link href="/dashboard">
-                <Button className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
+              <LinkButton href="/dashboard" className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
                   Go to dashboard
-                </Button>
-              </Link>
+                </LinkButton>
             </div>
           ) : inviter.id === dbUser.id ? (
             <div className="text-center">
               <p className="text-muted-foreground mb-6">You cannot accept your own invite link.</p>
-              <Link href="/dashboard">
-                <Button className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
+              <LinkButton href="/dashboard" className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
                   Go to dashboard
-                </Button>
-              </Link>
+                </LinkButton>
             </div>
           ) : dbUser.partner_id ? (
             <div className="text-center">
               <p className="text-muted-foreground mb-6">You are already linked with a partner. Leave couple mode first before accepting a new invite.</p>
-              <Link href="/dashboard">
-                <Button className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
+              <LinkButton href="/dashboard" className="rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0">
                   Go to dashboard
-                </Button>
-              </Link>
+                </LinkButton>
             </div>
           ) : (
             <div>

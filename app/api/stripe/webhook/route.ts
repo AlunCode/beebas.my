@@ -121,7 +121,9 @@ export async function POST(request: NextRequest) {
               : 0
 
             const planName = firstItem?.price?.nickname || 'Pro'
-            const nextBilling = new Date((subscription as any).current_period_end * 1000)
+            const nextBilling = new Date(
+              Math.max(...subscription.items.data.map((item) => item.current_period_end)) * 1000
+            )
             const nextBillingDate = nextBilling.toLocaleDateString('en-MY', {
               year: 'numeric',
               month: 'long',

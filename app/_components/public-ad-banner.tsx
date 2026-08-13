@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 interface PublicAdBannerProps {
   /** Which ad slot env var to use. Defaults to NEXT_PUBLIC_ADSENSE_SLOT_PUBLIC. */
@@ -14,33 +14,22 @@ const SLOTS: Record<string, string | undefined> = {
   'in-article': process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE,
 }
 
-const PLACEHOLDERS = [
-  { icon: '💳', text: 'Balance transfer at 0% for 12 months — compare Malaysia\'s best offers.' },
-  { icon: '📊', text: 'Free credit score check — see where you stand in 60 seconds.' },
-  { icon: '🏦', text: 'Personal loan rates from 5.99% p.a. — compare 10+ Malaysian banks.' },
-  { icon: '💰', text: 'High-yield savings account — earn up to 4% p.a. with no lock-in.' },
-]
-
-let placeholderIndex = 0
+const PLACEHOLDER = {
+  icon: '💳',
+  text: "Balance transfer at 0% for 12 months — compare Malaysia's best offers.",
+}
 
 export function PublicAdBanner({ slot = 'public', className = '' }: PublicAdBannerProps) {
   const adSlot = SLOTS[slot]
   const showReal = Boolean(PUBLISHER_ID && adSlot)
-  const [placeholder, setPlaceholder] = useState(PLACEHOLDERS[0])
-
-  useEffect(() => {
-    if (!showReal) {
-      // 👇 Rotate only after hydration is complete — safe, client-only
-      setPlaceholder(PLACEHOLDERS[placeholderIndex++ % PLACEHOLDERS.length])
-    }
-  }, [showReal])
 
   useEffect(() => {
     if (!showReal) return
     try {
-      ; ((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;((window as any).adsbygoogle = (window as any).adsbygoogle || []).push({})
     } catch {
-      // safe to ignore
+      // adsbygoogle not loaded yet — safe to ignore
     }
   }, [showReal])
 
@@ -65,11 +54,11 @@ export function PublicAdBanner({ slot = 'public', className = '' }: PublicAdBann
       ) : (
         <div className="flex items-center gap-4 px-5 py-4 pr-12">
           <div className="w-9 h-9 rounded-xl bg-gray-50 flex items-center justify-center text-lg shrink-0">
-            {placeholder.icon}
+            {PLACEHOLDER.icon}
           </div>
           <p className="text-sm text-muted-foreground leading-snug">
             <span className="font-semibold text-[#1C1C1C]">Sponsored · </span>
-            {placeholder.text}
+            {PLACEHOLDER.text}
           </p>
         </div>
       )}

@@ -29,39 +29,54 @@ export async function addDebt(formData: FormData) {
   return { success: true }
 }
 
+type UserRow = {
+  subscription_status: string | null
+  partner_id: string | null
+}
+
 export async function markDebtPaid(debtId: string) {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return { error: 'Not authenticated', milestones: [] as milestone_type[] }
 
-  // Fetch all user's debts (inc. partner's) before deletion so we can calculate milestones
-  const { data: { subscription_status, partner_id } = {} } = await supabase
-    .from('users').select('subscription_status, partner_id').eq('id', user.id).single() as any
+  const { data } = await supabase
+    .from('users')
+    .select('subscription_status, partner_id')
+    .eq('id', user.id)
+    .single() as { data: UserRow | null; error: unknown }
 
-  const userIds = partner_id ? [user.id, partner_id] : [user.id]
+  const userIds: string[] = data?.partner_id
+    ? [user.id, data.partner_id]
+    : [user.id]
+
   const { data: allDebts } = await supabase
-    .from('debts').select('id, user_id, balance, original_balance').in('user_id', userIds)
+    .from('debts')
+    .select('id, user_id, balance, original_balance')
+    .in('user_id', userIds)
 
   if (!allDebts) return { error: 'Could not fetch debts', milestones: [] as milestone_type[] }
 
-  // Delete the debt
   const { error: delError } = await supabase
-    .from('debts').delete().eq('id', debtId).eq('user_id', user.id)
+    .from('debts')
+    .delete()
+    .eq('id', debtId)
+    .eq('user_id', user.id)
   if (delError) return { error: delError.message, milestones: [] as milestone_type[] }
 
   revalidatePath('/dashboard')
 
-  // Only award milestones to Pro users (includes pro, pro_lifetime, planner_monthly, planner_annual)
   const proStatuses = ['pro', 'pro_lifetime', 'planner_monthly', 'planner_annual']
-  if (!proStatuses.includes(subscription_status)) return { success: true, milestones: [] as milestone_type[] }
+  const subscriptionStatus = data?.subscription_status ?? ''
+  if (!proStatuses.includes(subscriptionStatus)) return { success: true, milestones: [] as milestone_type[] }
 
   const remaining = allDebts.filter(d => d.id !== debtId)
   const totalOriginal = allDebts.reduce((s, d) => s + (d.original_balance ?? d.balance), 0)
   const totalRemaining = remaining.reduce((s, d) => s + d.balance, 0)
 
-  // Fetch already-earned milestones to avoid duplicates
   const { data: earned } = await supabase
-    .from('milestones').select('type').eq('user_id', user.id)
+    .from('milestones')
+    .select('type')
+    .eq('user_id', user.id)
   const earnedSet = new Set((earned ?? []).map(m => m.type))
 
   const toAward: milestone_type[] = []

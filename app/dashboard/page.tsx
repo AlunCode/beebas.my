@@ -1,7 +1,8 @@
 import Link from 'next/link'
+import { headers } from 'next/headers'
+import { LinkButton } from '@/components/ui/link-button'
 import { getAuthUser, isPro } from '@/lib/auth/get-user'
 import { createClient } from '@/lib/supabase/server'
-import { Button } from '@/components/ui/button'
 import { LogoutButton } from './_components/logout-button'
 import { DebtForm } from './_components/debt-form'
 import { DebtList } from './_components/debt-list'
@@ -25,6 +26,9 @@ export default async function DashboardPage({
   const justUpgraded = params.upgraded === 'true'
   const justCoupled = params.coupled === 'true'
   const justCancelled = params.subscription === 'cancelled'
+
+  const headersList = await headers()
+  const origin = `${headersList.get('x-forwarded-proto') ?? 'https'}://${headersList.get('host') ?? 'beebas.my'}`
 
   const supabase = await createClient()
 
@@ -88,7 +92,7 @@ export default async function DashboardPage({
         )}
 
         {/* Couple mode linked banner */}
-        {justCoupled && (
+        {justCoupled && user.partner_id && (
           <div className="rounded-2xl bg-emerald-50 border border-emerald-200 px-5 py-4 flex items-center gap-3">
             <span className="text-2xl">👫</span>
             <div>
@@ -145,16 +149,14 @@ export default async function DashboardPage({
               <p className="font-bold text-[#1C1C1C] text-sm">You've hit the 3-debt free plan limit</p>
               <p className="text-xs text-[#8B6000] mt-0.5">Upgrade to Pro for unlimited debts, PDF exports, couple mode and more.</p>
             </div>
-            <Link href="/pricing" className="shrink-0">
-              <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-sm h-9">
+            <LinkButton href="/pricing" className="shrink-0 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-sm h-9">
                 Upgrade →
-              </Button>
-            </Link>
+              </LinkButton>
           </div>
         )}
 
         {/* Debt list */}
-        {debtList.length > 0 && <DebtList debts={visibleDebts} totalCount={debtList.length} isPro={pro} />}
+        {debtList.length > 0 && <DebtList debts={visibleDebts} totalCount={debtList.length} isPro={pro} currentUserId={user.id} />}
 
         {/* Empty state — onboarding */}
         {debtList.length === 0 && <OnboardingSteps isPro={pro} />}
@@ -179,10 +181,12 @@ export default async function DashboardPage({
 
         {/* Couple mode card */}
         <CoupleModeCard
+          key={user.partner_id ?? 'unlinked'}
           isPro={pro}
           partnerId={user.partner_id}
           partnerEmail={partnerEmail}
           existingCode={user.couple_invite_code}
+          origin={origin}
         />
 
         {/* Milestone badges */}
@@ -198,11 +202,9 @@ export default async function DashboardPage({
               <p className="font-bold text-white text-sm">Unlock the full hive 🐝</p>
               <p className="text-xs text-white/50 mt-0.5">PDF exports, couple mode, milestone badges, monthly digest — all in Pro.</p>
             </div>
-            <Link href="/pricing" className="shrink-0">
-              <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-sm h-9">
+            <LinkButton href="/pricing" className="shrink-0 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-sm h-9">
                 See plans
-              </Button>
-            </Link>
+              </LinkButton>
           </div>
         )}
       </main>

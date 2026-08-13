@@ -39,11 +39,12 @@ interface Props {
   debts: DebtRow[]
   totalCount: number
   isPro: boolean
+  currentUserId?: string
 }
 
 type ConfirmAction = { id: string; name: string; action: 'delete' | 'paid' }
 
-export function DebtList({ debts, totalCount, isPro }: Props) {
+export function DebtList({ debts, totalCount, isPro, currentUserId }: Props) {
   const [localDebts, setLocalDebts] = useState(debts)
   const [localTotalCount, setLocalTotalCount] = useState(totalCount)
   const [deleting, setDeleting] = useState<string | null>(null)
@@ -148,15 +149,27 @@ export function DebtList({ debts, totalCount, isPro }: Props) {
               /* ── Normal row ── */
               <div className="flex items-center justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-bold text-[#1C1C1C] truncate">{debt.name}</span>
-                    <Badge
-                      variant="secondary"
-                      className="text-xs shrink-0 bg-[#FFF8DC] text-[#8B6000] border-[#FFD000]/30 rounded-full"
-                    >
-                      {debt.custom_category ?? TYPE_LABELS[debt.debt_type] ?? 'Other'}
-                    </Badge>
-                  </div>
+              <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <span className="font-bold text-[#1C1C1C] truncate">{debt.name}</span>
+                {currentUserId && (
+                  <Badge
+                    variant="secondary"
+                    className={`text-xs shrink-0 rounded-full ${
+                      debt.user_id === currentUserId
+                        ? 'bg-blue-100 text-blue-700 border-blue-200'
+                        : 'bg-purple-100 text-purple-700 border-purple-200'
+                    }`}
+                  >
+                    {debt.user_id === currentUserId ? 'You' : 'Partner'}
+                  </Badge>
+                )}
+                <Badge
+                  variant="secondary"
+                  className="text-xs shrink-0 bg-[#FFF8DC] text-[#8B6000] border-[#FFD000]/30 rounded-full"
+                >
+                  {debt.custom_category ?? TYPE_LABELS[debt.debt_type] ?? 'Other'}
+                </Badge>
+              </div>
                   <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-sm text-muted-foreground">
                     <span className="font-semibold text-[#1C1C1C]">{fmt(debt.balance)}</span>
                     <span>{debt.interest_rate}% p.a.</span>

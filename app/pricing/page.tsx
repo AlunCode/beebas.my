@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { LinkButton } from '@/components/ui/link-button'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { UpgradeButton } from './_components/upgrade-button'
@@ -149,20 +150,16 @@ export default async function PricingPage() {
           {user ? (
             <>
               {isPro && <BillingPortalButton />}
-              <Link href="/dashboard">
-                <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+              <LinkButton href="/dashboard" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
                   Dashboard
-                </Button>
-              </Link>
+                </LinkButton>
             </>
           ) : (
             <>
               <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Log in</Link>
-              <Link href="/signup">
-                <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+              <LinkButton href="/signup" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
                   Get started free
-                </Button>
-              </Link>
+                </LinkButton>
             </>
           )}
         </div>
@@ -199,11 +196,9 @@ export default async function PricingPage() {
                 ? isPro
                   ? <Button disabled className="w-full h-11 rounded-xl bg-gray-100 text-gray-400 font-bold border-0 shadow-none">Your previous plan</Button>
                   : <Button disabled className="w-full h-11 rounded-xl bg-gray-100 text-gray-500 font-bold border-0 shadow-none">Current plan</Button>
-                : <Link href="/signup" className="block">
-                  <Button className="w-full h-11 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none">
+                : <LinkButton href="/signup" className="block w-full h-11 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none">
                     Get started free
-                  </Button>
-                </Link>
+                  </LinkButton>
             }
           />
 
@@ -223,11 +218,9 @@ export default async function PricingPage() {
               ) : user ? (
                 <UpgradeButton priceId={MONTHLY_PRICE_ID} label="Start 14-day free trial" />
               ) : (
-                <Link href="/signup" className="block">
-                  <Button className="w-full h-11 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none">
+                <LinkButton href="/signup" className="block w-full h-11 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none">
                     Start 14-day free trial
-                  </Button>
-                </Link>
+                  </LinkButton>
               )
             }
           />
@@ -248,11 +241,9 @@ export default async function PricingPage() {
               ) : user ? (
                 <UpgradeButton priceId={ANNUAL_PRICE_ID} label="Get annual plan" variant="outline" />
               ) : (
-                <Link href="/signup" className="block">
-                  <Button variant="outline" className="w-full h-11 rounded-xl font-bold shadow-none">
+                <LinkButton href="/signup" variant="outline" className="block w-full h-11 rounded-xl font-bold shadow-none">
                     Start free, then upgrade
-                  </Button>
-                </Link>
+                  </LinkButton>
               )
             }
           />
@@ -273,11 +264,9 @@ export default async function PricingPage() {
               ) : user ? (
                 <UpgradeButton priceId={LIFETIME_PRICE_ID} mode="payment" label="Get lifetime access" variant="outline" /> 
               ) : (
-                <Link href="/signup" className="block">
-                  <Button variant="outline" className="w-full h-11 rounded-xl font-bold shadow-none">
+                <LinkButton href="/signup" variant="outline" className="block w-full h-11 rounded-xl font-bold shadow-none">
                     Start free, then upgrade
-                  </Button>
-                </Link>
+                  </LinkButton>
               )
             }
           />

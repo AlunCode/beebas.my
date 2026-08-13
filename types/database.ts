@@ -125,6 +125,7 @@ export interface Database {
           subscription_status: subscription_status
           partner_id: string | null
           couple_invite_code: string | null
+          couple_invitee: boolean
           digest_opted_out: boolean
           digest_last_sent: string | null
           role: user_role
@@ -138,6 +139,7 @@ export interface Database {
           subscription_status?: subscription_status
           partner_id?: string | null
           couple_invite_code?: string | null
+          couple_invitee?: boolean
           digest_opted_out?: boolean
           digest_last_sent?: string | null
           role?: user_role
@@ -151,6 +153,7 @@ export interface Database {
           subscription_status?: subscription_status
           partner_id?: string | null
           couple_invite_code?: string | null
+          couple_invitee?: boolean
           digest_opted_out?: boolean
           digest_last_sent?: string | null
           role?: user_role
@@ -199,7 +202,25 @@ export interface Database {
       }
     }
     Views: Record<string, never>
-    Functions: Record<string, never>
+    Functions: {
+      lookup_inviter: {
+        Args: { invite_code: string }
+        Returns: {
+          id: string
+          email: string
+          partner_id: string | null
+          subscription_status: subscription_status
+        }[]
+      }
+      link_couple: {
+        Args: { inviter_id: string }
+        Returns: string
+      }
+      unlink_couple: {
+        Args: Record<string, never>
+        Returns: undefined
+      }
+    }
     CompositeTypes: Record<string, never>
     Enums: {
       debt_type: "personal_loan" | "credit_card" | "ptptn" | "car_loan" | "home_loan" | "bnpl" | "aeon_credit" | "other"

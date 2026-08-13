@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 
 export default function NotFound() {
   return (
@@ -24,16 +24,12 @@ export default function NotFound() {
             The page you're looking for doesn't exist — or it might have moved. Let's get you back on track.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/">
-              <Button className="h-12 px-8 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none w-full sm:w-auto">
+            <LinkButton href="/" className="h-12 px-8 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none w-full sm:w-auto">
                 Go home
-              </Button>
-            </Link>
-            <Link href="/dashboard">
-              <Button variant="outline" className="h-12 px-8 rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold text-base w-full sm:w-auto">
+              </LinkButton>
+            <LinkButton href="/dashboard" variant="outline" className="h-12 px-8 rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold text-base w-full sm:w-auto">
                 Go to dashboard
-              </Button>
-            </Link>
+              </LinkButton>
           </div>
         </div>
       </div>

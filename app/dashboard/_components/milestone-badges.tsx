@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import type { milestone_type } from '@/types/database'
 
 const BADGES: { type: milestone_type; emoji: string; name: string; desc: string; streakOnly?: boolean }[] = [
@@ -64,11 +64,9 @@ export function MilestoneBadges({ earned, isPro }: Props) {
       {!isPro && (
         <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">Earn badges by paying off your debts. Pro only.</p>
-          <Link href="/pricing" className="shrink-0">
-            <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-xs h-8 px-3">
+          <LinkButton href="/pricing" className="shrink-0 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none text-xs h-8 px-3">
               Upgrade →
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       )}
     </div>

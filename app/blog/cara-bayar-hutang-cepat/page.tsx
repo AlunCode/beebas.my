@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
@@ -74,11 +74,9 @@ export default function ArticlePage() {
           <Link href="/pricing" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Pricing</Link>
           <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Log in</Link>
-          <Link href="/signup">
-            <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+          <LinkButton href="/signup" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
               Get started free
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </nav>
 
@@ -317,16 +315,12 @@ export default function ArticlePage() {
             Masukkan hutang anda sekali. Beebas membandingkan snowball vs avalanche dan menunjukkan tarikh bebas hutang anda yang tepat.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/signup">
-              <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
+            <LinkButton href="/signup" className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
                 Dapatkan pelan langsaikan percuma →
-              </Button>
-            </Link>
-            <Link href="/#calculator">
-              <Button variant="outline" className="rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold h-11 px-8">
+              </LinkButton>
+            <LinkButton href="/#calculator" variant="outline" className="rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold h-11 px-8">
                 Cuba kalkulator percuma
-              </Button>
-            </Link>
+              </LinkButton>
           </div>
         </div>
 

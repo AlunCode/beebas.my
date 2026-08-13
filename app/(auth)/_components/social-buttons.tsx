@@ -45,10 +45,12 @@ export function SocialButtons() {
     setLoading(provider)
     setError(null)
     const supabase = createClient()
+    const params = new URLSearchParams(window.location.search)
+    const next = params.get('redirect') || '/dashboard'
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: `${window.location.origin}/auth/confirm?next=/dashboard`,
+        redirectTo: `${window.location.origin}/auth/confirm?next=${encodeURIComponent(next)}`,
       },
     })
     if (error) {

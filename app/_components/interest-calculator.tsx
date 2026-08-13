@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import Link from 'next/link'
+import { LinkButton } from '@/components/ui/link-button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Button } from '@/components/ui/button'
@@ -127,7 +127,6 @@ export function InterestCalculator() {
                   label="Interest with extra payment"
                   value={fmt(extraResult.totalInterestPaid)}
                   sub={`Paid off in ${months2str(extraResult.debtFreeMonths)}`}
-                  positive
                 />
               ) : (
                 <div className="rounded-2xl bg-gray-50 border border-dashed border-gray-200 p-4 flex items-center justify-center text-sm text-muted-foreground text-center">
@@ -177,11 +176,9 @@ export function InterestCalculator() {
               <p className="text-white/50 text-sm mb-4">
                 Add all your debts, pick snowball or avalanche, and see your exact debt-free date.
               </p>
-              <Link href="/signup">
-                <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
+              <LinkButton href="/signup" className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
                   Get your free payoff plan →
-                </Button>
-              </Link>
+                </LinkButton>
             </div>
           </div>
         ) : (
@@ -197,9 +194,9 @@ export function InterestCalculator() {
 }
 
 function ResultCard({
-  label, value, sub, danger = false, positive = false,
+  label, value, sub, danger = false
 }: {
-  label: string; value: string; sub: string; danger?: boolean; positive?: boolean
+  label: string; value: string; sub: string; danger?: boolean;
 }) {
   return (
     <div className={`rounded-2xl p-4 ${danger ? 'bg-red-50 border border-red-100' : 'bg-emerald-50 border border-emerald-100'}`}>

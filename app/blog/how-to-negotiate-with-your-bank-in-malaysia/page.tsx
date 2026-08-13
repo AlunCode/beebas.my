@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
@@ -83,11 +83,9 @@ export default function ArticlePage() {
           <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Log in</Link>
-          <Link href="/signup">
-            <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+          <LinkButton href="/signup" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
               Get started free
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </nav>
 
@@ -296,11 +294,9 @@ export default function ArticlePage() {
           <p className="text-white/50 text-sm mb-5">
             Before you call your bank, use Beebas to calculate how much interest you'd save if they reduce your rate by even 1–2%. Then walk into the call with the numbers in hand.
           </p>
-          <Link href="/signup">
-            <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
+          <LinkButton href="/signup" className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
               Get your free payoff plan →
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
 
         {/* Related Articles */}

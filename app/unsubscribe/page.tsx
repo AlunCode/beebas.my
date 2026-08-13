@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import { unsubscribeByUid } from '@/app/actions/digest'
 
 export default async function UnsubscribePage({
@@ -43,11 +43,9 @@ export default async function UnsubscribePage({
             </>
           )}
 
-          <Link href="/dashboard">
-            <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none">
+          <LinkButton href="/dashboard" className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none">
               Go to dashboard
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
         <p className="text-center text-xs text-muted-foreground mt-4">
           <Link href="/" className="hover:underline">Beebas</Link> · Malaysia's debt payoff tracker

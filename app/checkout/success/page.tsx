@@ -104,7 +104,7 @@ export default async function CheckoutSuccessPage({
         planName = 'Lifetime Pro'
         planType = 'lifetime'
       } else if (params.session_id && sessionMode === 'subscription' && user.stripe_customer_id) {
-        const session = await stripe.checkout.sessions.retrieve(params.session_id)
+        // const session = await stripe.checkout.sessions.retrieve(params.session_id)
         const subscription = await stripe.subscriptions.list({
           customer: user.stripe_customer_id,
           status: 'all',

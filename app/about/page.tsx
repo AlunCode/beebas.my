@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import { PublicAdBanner } from '@/app/_components/public-ad-banner'
 
 export const metadata: Metadata = {
@@ -23,11 +23,9 @@ export default function AboutPage() {
           <Link href="/blog" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Blog</Link>
           <Link href="/contact" className="text-sm text-white/60 hover:text-white transition-colors hidden sm:block">Contact</Link>
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">Log in</Link>
-          <Link href="/signup">
-            <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+          <LinkButton href="/signup" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
               Get started free
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </nav>
 
@@ -104,11 +102,9 @@ export default function AboutPage() {
           <div className="text-3xl mb-3">🐝</div>
           <h3 className="text-white font-extrabold text-xl mb-2">Ready to see your debt-free date?</h3>
           <p className="text-white/50 text-sm mb-5">Free to start. Takes 3 minutes.</p>
-          <Link href="/signup">
-            <Button className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
+          <LinkButton href="/signup" className="rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 shadow-none px-8 h-11">
               Get your free payoff plan →
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </main>
 

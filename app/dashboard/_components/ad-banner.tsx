@@ -2,7 +2,8 @@
 
 import { useEffect } from 'react'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 interface AdBannerProps {
   slot: 'mid' | 'bottom'
@@ -78,11 +79,9 @@ export function AdBanner({ slot, adSlot }: AdBannerProps) {
             href="#"
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className="shrink-0"
+            className={cn(buttonVariants({ size: 'sm' }), 'shrink-0 rounded-lg bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none text-xs')}
           >
-            <Button size="sm" className="rounded-lg bg-[#1C1C1C] hover:bg-black text-white font-bold border-0 shadow-none text-xs">
-              Learn more →
-            </Button>
+            Learn more →
           </a>
         </div>
       ) : (
@@ -103,11 +102,9 @@ export function AdBanner({ slot, adSlot }: AdBannerProps) {
             href="#"
             target="_blank"
             rel="noopener noreferrer sponsored"
-            className="shrink-0"
+            className={cn(buttonVariants({ size: 'sm', variant: 'outline' }), 'shrink-0 rounded-lg font-bold text-xs')}
           >
-            <Button size="sm" variant="outline" className="rounded-lg font-bold text-xs">
-              Compare now →
-            </Button>
+            Compare now →
           </a>
         </div>
       )}

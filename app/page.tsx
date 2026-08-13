@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
+import { LinkButton } from '@/components/ui/link-button'
 import { InterestCalculator } from './_components/interest-calculator'
 import { PublicAdBanner } from './_components/public-ad-banner'
 
@@ -155,11 +155,9 @@ export default function LandingPage() {
           <Link href="/login" className="text-sm text-white/60 hover:text-white transition-colors">
             Log in
           </Link>
-          <Link href="/signup">
-            <Button size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
+          <LinkButton href="/signup" size="sm" className="rounded-lg bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold border-0 text-xs">
               Get started free
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </nav>
 
@@ -177,16 +175,12 @@ export default function LandingPage() {
             Beebas calculates the fastest way to pay off all your debts — credit cards, car loans, PTPTN — and shows you exactly when you'll be free.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/signup">
-              <Button className="h-13 px-8 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none w-full sm:w-auto">
+            <LinkButton href="/signup" className="h-13 px-8 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none w-full sm:w-auto">
                 Get your free payoff plan →
-              </Button>
-            </Link>
-            <a href="#calculator">
-              <Button variant="outline" className="h-13 px-8 rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold text-base w-full sm:w-auto">
+              </LinkButton>
+            <LinkButton href="#calculator" variant="outline" className="h-13 px-8 rounded-xl border-white/20 text-white/70 hover:bg-white/10 hover:text-white bg-transparent font-bold text-base w-full sm:w-auto">
                 Try the free calculator
-              </Button>
-            </a>
+              </LinkButton>
           </div>
           <p className="text-white/30 text-xs mt-4">👥 Join 200+ Malaysians already tracking their debt · No credit card required</p>
         </div>
@@ -369,16 +363,12 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/signup">
-              <Button className="h-12 px-10 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none">
+            <LinkButton href="/signup" className="h-12 px-10 rounded-xl bg-[#FFD000] hover:bg-[#f0c400] text-[#1C1C1C] font-bold text-base border-0 shadow-none">
                 Get started free →
-              </Button>
-            </Link>
-            <Link href="/pricing">
-              <Button variant="outline" className="h-12 px-10 rounded-xl font-bold text-base">
+              </LinkButton>
+            <LinkButton href="/pricing" variant="outline" className="h-12 px-10 rounded-xl font-bold text-base">
                 See all plans
-              </Button>
-            </Link>
+              </LinkButton>
           </div>
         </div>
       </section>
@@ -413,11 +403,9 @@ export default function LandingPage() {
           <p className="text-[#1C1C1C]/60 text-lg mb-8">
             Join Malaysians who switched from guessing to knowing exactly when they'll be free.
           </p>
-          <Link href="/signup">
-            <Button className="h-13 px-10 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold text-base border-0 shadow-none">
+          <LinkButton href="/signup" className="h-13 px-10 rounded-xl bg-[#1C1C1C] hover:bg-black text-white font-bold text-base border-0 shadow-none">
               Start for free — takes 3 minutes
-            </Button>
-          </Link>
+            </LinkButton>
         </div>
       </section>
 
@@ -441,7 +429,7 @@ export default function LandingPage() {
           </div>
           <div className="border-t border-white/10 mt-8 pt-8 text-center">
             <p className="text-white/30 text-xs">
-              © {new Date().getFullYear()} Beebas. A financial planning tool — not financial advice.
+              © <span suppressHydrationWarning>{new Date().getFullYear()}</span> Beebas. A financial planning tool — not financial advice.
               Consult a licensed advisor for professional guidance. Prices in MYR.
             </p>
           </div>
